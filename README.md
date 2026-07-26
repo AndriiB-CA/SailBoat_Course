@@ -66,6 +66,14 @@ Full detail, hour estimates, and a dated Halifax season plan: **[COURSE_MAP.md](
 
 ---
 
+## Phone-friendly web version / Веб-версія для телефону
+
+**EN** — A condensed **[Deck Card](web/deck-card.html)** holds the things you actually need at the dock or in a hurry: the 1‑10‑1 cold-water principle, points of sail, right of way, buoyage, the commands, the MAYDAY format, the pre-departure checklist, and the Halifax numbers. It has an **EN / UA / both** language toggle so you can collapse it to one language on a small screen. Published at: <https://claude.ai/code/artifact/b0591ec2-e5b0-4121-badb-7b2df0bf0abf>
+
+**UA** — Скорочена **[Палубна картка](web/deck-card.html)** містить те, що справді потрібно на причалі або в спішці: принцип 1‑10‑1, курси відносно вітру, правила розходження, систему буїв, команди, формат MAYDAY, чек-лист перед виходом і числа Галіфаксу. Має перемикач мови **EN / UA / обидві**, щоб на малому екрані залишити одну.
+
+---
+
 ## Reference material / Довідкові матеріали
 
 - **[Glossary EN ⇄ UA](glossary.md)** — every sailing term in both languages, with pronunciation help
