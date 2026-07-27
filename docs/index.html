@@ -1,3 +1,13 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A complete bilingual English/Ukrainian sailing course for beginners in Halifax, Nova Scotia — from the PCOC licence to Sail Canada skipper certification, with interactive tools.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#9973;</text></svg>">
+</head>
+<body>
 <title>Sailing Halifax · Interactive Course</title>
 
 <style>
@@ -351,6 +361,22 @@
   }
 </style>
 
+<nav class="site-nav">
+  <a href="./index.html" aria-current="page">Interactive course</a>
+  <a href="./deck.html" >Deck card</a>
+  <a href="https://github.com/AndriiB-CA/SailBoat_Course" target="_blank" rel="noopener">Source</a>
+</nav>
+<style>
+  .site-nav{display:flex;gap:.15rem;flex-wrap:wrap;align-items:center;
+    background:var(--surface,#FAFCFD);border-bottom:1px solid var(--rule,#C4D3DC);
+    padding:.4rem clamp(.7rem,3vw,1.4rem);
+    font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.68rem;
+    letter-spacing:.06em;text-transform:uppercase;position:relative;z-index:60}
+  .site-nav a{color:var(--ink-soft,#556975);text-decoration:none;padding:.3rem .6rem;border-radius:2px}
+  .site-nav a:hover{background:var(--shoal,#DFEAF0);color:var(--ink,#0F1B24)}
+  .site-nav a[aria-current="page"]{color:var(--magenta,#AC1A6E);font-weight:700}
+  .site-nav a:focus-visible{outline:2px solid var(--magenta,#AC1A6E);outline-offset:1px}
+</style>
 
 <div class="app" data-lang="both" id="app">
   <div class="scrim" id="scrim"></div>
@@ -1218,3 +1244,5 @@
   go(valid ? start : "readme");
 })();
 </script>
+</body>
+</html>

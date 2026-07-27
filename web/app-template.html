@@ -57,7 +57,10 @@
   .app[data-lang="en"] [data-lang="ua"]{display:none}
   .app[data-lang="ua"] [data-lang="en"]{display:none}
   .app:not([data-lang="both"]) [data-lang="both"]{display:none}
-  .app[data-lang="both"] .nav-item [data-lang="ua"]{display:none}
+  /* where a Ukrainian subtitle is rendered separately, the inline Ukrainian
+     twin would duplicate it in "both" mode */
+  .app[data-lang="both"] .nav-item [data-lang="ua"],
+  .app[data-lang="both"] .tool-head h2 > [data-lang="ua"]{display:none}
 
   /* ---------- shell ---------- */
   .app{display:flex;min-height:100vh}
@@ -66,6 +69,7 @@
   .rail{
     width:var(--rail);flex:0 0 var(--rail);background:var(--surface);
     border-right:1px solid var(--rule);height:100vh;position:sticky;top:0;
+    max-height:100vh;
     display:flex;flex-direction:column;overflow:hidden;
   }
   .rail-head{padding:1.1rem 1.1rem .85rem;border-bottom:1px solid var(--rule-soft);
@@ -208,7 +212,11 @@
   .tool-head{margin:0 0 1.4rem}
   .tool-head h2{font-family:var(--display);font-size:clamp(1.5rem,3.6vw,2.05rem);font-weight:600;
                 line-height:1.14;letter-spacing:-.015em;margin:0 0 .35rem}
-  .tool-head p{margin:0;color:var(--ink-soft);max-width:var(--measure)}
+  .tool-head p{margin:0 0 .5rem;color:var(--ink-soft);max-width:var(--measure)}
+  .tool-head p:last-child{margin-bottom:0}
+  .tool-head h2 .sub{display:block;font-size:.95rem;font-style:italic;font-weight:400;
+                     color:var(--ink-soft);letter-spacing:0;margin-top:.1em}
+  .sep{color:var(--ink-faint)}
   .card{background:var(--surface);border:1px solid var(--rule);border-radius:2px;
         box-shadow:var(--shadow);padding:1.15rem 1.15rem 1.3rem;margin:0 0 1.3rem}
   .card > :first-child{margin-top:0}
@@ -343,6 +351,7 @@
   }
 </style>
 
+<!--SITE_NAV-->
 <div class="app" data-lang="both" id="app">
   <div class="scrim" id="scrim"></div>
 
@@ -427,6 +436,25 @@
   }
 
   const money = n => "$" + Math.round(n).toLocaleString("en-CA");
+
+  // Bilingual heading + intro for a tool view. In "both" mode the Ukrainian
+  // sits under the English as a subtitle / separate paragraph rather than being
+  // concatenated onto it.
+  function toolHead(en, ua, dEn, dUa) {
+    return '<div class="tool-head"><h2>' +
+             '<span data-lang="en">' + en + "</span>" +
+             '<span data-lang="ua">' + ua + "</span>" +
+             '<em class="sub" data-lang="both">' + ua + "</em>" +
+           "</h2>" +
+           '<p data-lang="en">' + dEn + "</p>" +
+           '<p data-lang="ua">' + dUa + "</p></div>";
+  }
+
+  // An inline EN/UA pair, separated when both are shown
+  const pair = (en, ua) =>
+    '<span data-lang="en">' + en + "</span>" +
+    '<span class="sep" data-lang="both"> / </span>' +
+    '<span data-lang="ua">' + ua + "</span>";
 
   /* ---------------- navigation ---------------- */
   let current = "readme";
@@ -620,16 +648,13 @@
   function renderPOS() {
     docTitle.textContent = "Points of sail explorer";
     content.innerHTML =
-      '<div class="tool-head">' +
-        '<h2><span data-lang="en">Points of sail explorer</span>' +
-            '<span data-lang="ua">Курси відносно вітру</span></h2>' +
-        '<p><span data-lang="en">Drag the boat around the circle, or use the slider and the arrow keys. ' +
-        'The wind always blows from the top. Watch the sail ease out as you turn away from the wind — ' +
-        'that relationship is 80% of sail trim.</span>' +
-        '<span data-lang="ua">Тягніть судно по колу або використовуйте повзунок і стрілки. ' +
-        'Вітер завжди дме зверху. Дивіться, як вітрило витравлюється, коли ви відвертаєте від вітру — ' +
-        'це співвідношення і є 80% налаштування вітрил.</span></p>' +
-      "</div>" +
+      toolHead("Points of sail explorer", "Курси відносно вітру",
+        "Drag the boat around the circle, or use the slider and the arrow keys. The wind always " +
+        "blows from the top. Watch the sail ease out as you turn away from the wind — that " +
+        "relationship is 80% of sail trim.",
+        "Тягніть судно по колу або використовуйте повзунок і стрілки. Вітер завжди дме зверху. " +
+        "Дивіться, як вітрило витравлюється, коли ви відвертаєте від вітру — це співвідношення " +
+        "і є 80% налаштування вітрил.") +
       '<div class="card"><div class="pos-wrap">' +
         '<div><svg class="pos-svg" id="posSvg" viewBox="0 0 400 406" role="img" ' +
           'aria-label="Interactive points of sail diagram"></svg>' +
@@ -762,8 +787,8 @@
       '<h3 class="pos-name">' + esc(z.en) + "<em>" + esc(z.ua) + "</em></h3>" +
       '<dl class="facts">' +
         "<div><dt>Angle off wind</dt><dd>" + Math.round(abs) + "°</dd></div>" +
-        "<div><dt>Tack</dt><dd><span data-lang=\"en\">" + tack + '</span><span data-lang="ua">' + tackUa + "</span></dd></div>" +
-        "<div><dt>Boom</dt><dd><span data-lang=\"en\">" + boom + '</span><span data-lang="ua">' + boomUa + "</span></dd></div>" +
+        "<div><dt>Tack</dt><dd>" + pair(tack, tackUa) + "</dd></div>" +
+        "<div><dt>Boom</dt><dd>" + pair(boom, boomUa) + "</dd></div>" +
         "<div><dt>Sail trim</dt><dd>" + (z.trim === null ? "flapping" : Math.round(tr) + "° out") + "</dd></div>" +
       "</dl>" +
       '<div class="pos-note"><p data-lang="en">' + z.note_en + "</p>" +
@@ -791,13 +816,11 @@
     docTitle.textContent = "PCOC practice exam";
     const best = S.quiz.best;
     content.innerHTML =
-      '<div class="tool-head">' +
-        '<h2><span data-lang="en">PCOC practice exam</span><span data-lang="ua">Пробний екзамен PCOC</span></h2>' +
-        '<p><span data-lang="en">' + QUIZ.length + " questions in the style of the real Pleasure Craft Operator Card exam, " +
-        "drawn from the course. Answer in your head, reveal, and mark yourself honestly.</span>" +
-        '<span data-lang="ua">' + QUIZ.length + " питань у стилі справжнього екзамену PCOC, узятих з курсу. " +
-        "Відповідайте подумки, відкривайте відповідь і оцінюйте себе чесно.</span></p>" +
-      "</div>" +
+      toolHead("PCOC practice exam", "Пробний екзамен PCOC",
+        QUIZ.length + " questions in the style of the real Pleasure Craft Operator Card exam, " +
+        "drawn from the course. Answer in your head, reveal, and mark yourself honestly.",
+        QUIZ.length + " питань у стилі справжнього екзамену PCOC, узятих з курсу. " +
+        "Відповідайте подумки, відкривайте відповідь і оцінюйте себе чесно.") +
       '<div class="warn-box">' +
         '<p data-lang="en">This is <strong>practice, not the exam</strong>. The real PCOC is taken through a ' +
         "Transport Canada accredited provider — typically about 50 multiple-choice questions with a pass mark " +
@@ -868,13 +891,13 @@
     const topics = [];
     GLOSSARY.forEach(t => { if (t.topic && topics.indexOf(t.topic) < 0) topics.push(t.topic); });
     content.innerHTML =
-      '<div class="tool-head">' +
-        '<h2><span data-lang="en">Glossary flashcards</span><span data-lang="ua">Картки глосарія</span></h2>' +
-        '<p><span data-lang="en">' + GLOSSARY.length + " terms. Tap the card to flip, then say whether you knew it. " +
-        "Your instructor teaches in English, so drill EN → UA until the English word arrives with no translation lag.</span>" +
-        '<span data-lang="ua">' + GLOSSARY.length + " термінів. Натисніть картку, щоб перевернути. " +
-        "Ваш інструктор викладає англійською, тому тренуйте EN → UA, доки англійське слово не приходитиме без затримки на переклад.</span></p>" +
-      "</div>" +
+      toolHead("Glossary flashcards", "Картки глосарія",
+        GLOSSARY.length + " terms. Tap the card to flip, then say whether you knew it. Your " +
+        "instructor teaches in English, so drill EN → UA until the English word arrives with " +
+        "no translation lag.",
+        GLOSSARY.length + " термінів. Натисніть картку, щоб перевернути. Ваш інструктор " +
+        "викладає англійською, тому тренуйте EN → UA, доки англійське слово не приходитиме " +
+        "без затримки на переклад.") +
       '<div class="card">' +
         '<div class="fc-controls" style="margin:0 0 1rem">' +
           '<select id="fcTopic" aria-label="Topic"><option value="all">All topics (' + GLOSSARY.length + ")</option>" +
@@ -948,13 +971,11 @@
   function renderCalc() {
     docTitle.textContent = "Boat cost calculator";
     content.innerHTML =
-      '<div class="tool-head">' +
-        '<h2><span data-lang="en">Boat cost calculator</span><span data-lang="ua">Калькулятор вартості судна</span></h2>' +
-        '<p><span data-lang="en">The number most buyers never work out. Enter a boat and see the annual running ' +
-        "cost and the realistic all-in first year.</span>" +
-        '<span data-lang="ua">Число, яке більшість покупців ніколи не рахує. Введіть параметри судна і подивіться ' +
-        "щорічні витрати та реалістичний перший рік разом з покупкою.</span></p>" +
-      "</div>" +
+      toolHead("Boat cost calculator", "Калькулятор вартості судна",
+        "The number most buyers never work out. Enter a boat and see the annual running cost " +
+        "and the realistic all-in first year.",
+        "Число, яке більшість покупців ніколи не рахує. Введіть параметри судна і подивіться " +
+        "щорічні витрати та реалістичний перший рік разом з покупкою.") +
       '<div class="warn-box">' +
         '<p data-lang="en"><strong>Planning estimates in 2026 Canadian dollars</strong>, from public listings and ' +
         "published rate cards for the Halifax area. Club fees, yard rates and premiums vary widely and change " +
@@ -1049,14 +1070,13 @@
   function renderLog() {
     docTitle.textContent = "Logbook";
     content.innerHTML =
-      '<div class="tool-head">' +
-        '<h2><span data-lang="en">Logbook</span><span data-lang="ua">Судновий журнал</span></h2>' +
-        '<p><span data-lang="en">Certifications, insurers and charter companies all ask for logged hours — and a ' +
-        "log is evidence where memory is not. Track hours as skipper separately: it is a different skill from " +
-        "crewing, and it is what the next certification actually assesses.</span>" +
-        '<span data-lang="ua">Сертифікації, страховики й чартерні компанії питають про записані години — журнал ' +
-        "це доказ, а пам'ять ні. Відстежуйте години як шкіпер окремо: це інший навик, ніж робота в екіпажі.</span></p>" +
-      "</div>" +
+      toolHead("Logbook", "Судновий журнал",
+        "Certifications, insurers and charter companies all ask for logged hours — and a log " +
+        "is evidence where memory is not. Track hours as skipper separately: it is a different " +
+        "skill from crewing, and it is what the next certification actually assesses.",
+        "Сертифікації, страховики й чартерні компанії питають про записані години — журнал це " +
+        "доказ, а пам'ять ні. Відстежуйте години як шкіпер окремо: це інший навик, ніж робота " +
+        "в екіпажі.") +
       '<div class="card">' +
         '<p class="card-label">New entry · Новий запис</p>' +
         '<div class="log-form">' +

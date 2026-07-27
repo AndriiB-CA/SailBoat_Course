@@ -67,6 +67,20 @@ Full detail, hour estimates, and a dated Halifax season plan: **[COURSE_MAP.md](
 
 ---
 
+## Live site / Живий сайт
+
+**🌐 <https://andriib-ca.github.io/SailBoat_Course/>**
+
+Deployed from `docs/` on every push by [`.github/workflows/pages.yml`](.github/workflows/pages.yml).
+Two pages:
+
+- **[/](https://andriib-ca.github.io/SailBoat_Course/)** — the full interactive course
+- **[/deck.html](https://andriib-ca.github.io/SailBoat_Course/deck.html)** — the phone-sized quick-reference card
+
+Build details and how to rebuild: [web/README.md](web/README.md).
+
+---
+
 ## Interactive web app / Інтерактивний застосунок
 
 **EN** — The whole course as a **[single interactive page](web/course.html)** — every module and appendix with sidebar navigation, full-text search, an **EN / UA / both** language toggle, per-module progress tracking, and every checklist in the course made tickable and saved in your browser. Plus five tools built from the course content:

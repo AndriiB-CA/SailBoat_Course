@@ -1,0 +1,1148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Bilingual quick-reference card for sailing in Halifax, Nova Scotia — cold-water survival, points of sail, right of way, buoyage and the MAYDAY format.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#9973;</text></svg>">
+</head>
+<body>
+<nav class="site-nav">
+  <a href="./index.html" >Interactive course</a>
+  <a href="./deck.html" aria-current="page">Deck card</a>
+  <a href="https://github.com/AndriiB-CA/SailBoat_Course" target="_blank" rel="noopener">Source</a>
+</nav>
+<style>
+  .site-nav{display:flex;gap:.15rem;flex-wrap:wrap;align-items:center;
+    background:var(--surface,#FAFCFD);border-bottom:1px solid var(--rule,#C4D3DC);
+    padding:.4rem clamp(.7rem,3vw,1.4rem);
+    font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.68rem;
+    letter-spacing:.06em;text-transform:uppercase;position:relative;z-index:60}
+  .site-nav a{color:var(--ink-soft,#556975);text-decoration:none;padding:.3rem .6rem;border-radius:2px}
+  .site-nav a:hover{background:var(--shoal,#DFEAF0);color:var(--ink,#0F1B24)}
+  .site-nav a[aria-current="page"]{color:var(--magenta,#AC1A6E);font-weight:700}
+  .site-nav a:focus-visible{outline:2px solid var(--magenta,#AC1A6E);outline-offset:1px}
+</style>
+<title>Deck Card · Halifax Sailing Reference</title>
+
+<style>
+  /* ============================================================
+     Palette derived from Canadian Hydrographic Service charts:
+     white-blue deep water ground, navy engraving ink,
+     cautionary magenta as the single accent, buoy red/green
+     reserved strictly for semantic use.
+     ============================================================ */
+  :root {
+    --water:      #EDF2F5;
+    --surface:    #FAFCFD;
+    --shoal:      #DFEAF0;
+    --ink:        #0F1B24;
+    --ink-soft:   #556975;
+    --ink-faint:  #8598A4;
+    --rule:       #C4D3DC;
+    --rule-soft:  #DCE6EC;
+    --magenta:    #AC1A6E;
+    --magenta-bg: #FBEAF3;
+    --buoy-red:   #AF262B;
+    --buoy-green: #1C6E45;
+    --shadow:     0 1px 2px rgba(15,27,36,.05);
+
+    --display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua",
+               Charter, Georgia, "Times New Roman", serif;
+    --body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+            "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas,
+            "Liberation Mono", monospace;
+
+    --measure: 66ch;
+    --pad: clamp(1rem, 4vw, 2rem);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --water:      #0B151C;
+      --surface:    #121E26;
+      --shoal:      #1A2A34;
+      --ink:        #E3EDF2;
+      --ink-soft:   #9AAEBA;
+      --ink-faint:  #6B808D;
+      --rule:       #2A3D49;
+      --rule-soft:  #1E2E38;
+      --magenta:    #F27CBE;
+      --magenta-bg: #2B1526;
+      --buoy-red:   #EE7A7E;
+      --buoy-green: #5FBE8C;
+      --shadow:     0 1px 2px rgba(0,0,0,.3);
+    }
+  }
+  /* viewer toggle must win in both directions */
+  :root[data-theme="dark"] {
+    --water:#0B151C; --surface:#121E26; --shoal:#1A2A34;
+    --ink:#E3EDF2; --ink-soft:#9AAEBA; --ink-faint:#6B808D;
+    --rule:#2A3D49; --rule-soft:#1E2E38;
+    --magenta:#F27CBE; --magenta-bg:#2B1526;
+    --buoy-red:#EE7A7E; --buoy-green:#5FBE8C;
+    --shadow:0 1px 2px rgba(0,0,0,.3);
+  }
+  :root[data-theme="light"] {
+    --water:#EDF2F5; --surface:#FAFCFD; --shoal:#DFEAF0;
+    --ink:#0F1B24; --ink-soft:#556975; --ink-faint:#8598A4;
+    --rule:#C4D3DC; --rule-soft:#DCE6EC;
+    --magenta:#AC1A6E; --magenta-bg:#FBEAF3;
+    --buoy-red:#AF262B; --buoy-green:#1C6E45;
+    --shadow:0 1px 2px rgba(15,27,36,.05);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--water);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* ---------- masthead ---------- */
+  .masthead {
+    border-bottom: 1px solid var(--rule);
+    padding: var(--pad) var(--pad) 1.4rem;
+    background: var(--surface);
+  }
+  .masthead-inner { max-width: 1080px; margin: 0 auto; }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: .68rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--magenta);
+    margin: 0 0 .7rem;
+  }
+  h1 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(1.9rem, 6vw, 3rem);
+    line-height: 1.08;
+    letter-spacing: -.015em;
+    text-wrap: balance;
+    margin: 0 0 .1em;
+  }
+  .h1-ua {
+    font-family: var(--display);
+    font-size: clamp(1.05rem, 3.2vw, 1.45rem);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin: 0 0 1rem;
+  }
+  .standfirst {
+    max-width: var(--measure);
+    color: var(--ink-soft);
+    font-size: 1rem;
+    margin: 0 0 1.4rem;
+  }
+
+  /* ---------- language switch ---------- */
+  .switch {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .55rem;
+  }
+  .switch-label {
+    font-family: var(--mono);
+    font-size: .66rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-right: .2rem;
+  }
+  .switch-group { display: flex; border: 1px solid var(--rule); border-radius: 2px; overflow: hidden; }
+  .switch button {
+    appearance: none;
+    border: 0;
+    border-left: 1px solid var(--rule);
+    background: var(--surface);
+    color: var(--ink-soft);
+    font-family: var(--mono);
+    font-size: .74rem;
+    letter-spacing: .06em;
+    padding: .5rem .85rem;
+    cursor: pointer;
+    transition: background .12s, color .12s;
+  }
+  .switch button:first-child { border-left: 0; }
+  .switch button:hover { background: var(--shoal); color: var(--ink); }
+  .switch button[aria-pressed="true"] {
+    background: var(--magenta);
+    color: var(--surface);
+  }
+  .switch button:focus-visible { outline: 2px solid var(--magenta); outline-offset: 2px; }
+
+  /* ---------- language visibility ---------- */
+  .page[data-lang="en"] .ua { display: none; }
+  .page[data-lang="ua"] .en { display: none; }
+
+  /* ---------- layout ---------- */
+  main {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: var(--pad);
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+  }
+  .grid {
+    display: grid;
+    gap: 1.6rem;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 900px) {
+    .grid.two { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ---------- chart-inset panel ---------- */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    box-shadow: var(--shadow);
+    padding: 1.35rem 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: .9rem;
+    min-width: 0;
+  }
+  .panel > * { margin: 0; }
+  .panel-label {
+    font-family: var(--mono);
+    font-size: .64rem;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding-bottom: .55rem;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .panel h2 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.4rem;
+    line-height: 1.18;
+    letter-spacing: -.01em;
+    text-wrap: balance;
+  }
+  .panel h2 .h2-ua { display: block; }
+  .panel h2 .ua-sub {
+    display: block;
+    font-size: .82rem;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink-soft);
+    letter-spacing: 0;
+    margin-top: .18em;
+  }
+  .panel h3 {
+    font-family: var(--body);
+    font-size: .82rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .panel p { max-width: var(--measure); }
+  .panel.accent { border-left: 3px solid var(--magenta); }
+  .panel.danger { border-left: 3px solid var(--buoy-red); }
+
+  /* ---------- text bits ---------- */
+  .ua { color: var(--ink-soft); }
+  p.ua, li .ua { font-size: .95rem; }
+  strong { font-weight: 700; }
+  .lede { font-size: 1.05rem; }
+  a { color: var(--magenta); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:focus-visible { outline: 2px solid var(--magenta); outline-offset: 2px; }
+
+  ul, ol { margin: 0; padding-left: 1.3rem; display: flex; flex-direction: column; gap: .5rem; }
+  li { max-width: var(--measure); }
+  ul.bare { list-style: none; padding-left: 0; }
+
+  .num {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: .78rem;
+    color: var(--magenta);
+    letter-spacing: .04em;
+  }
+
+  /* ---------- tables ---------- */
+  .scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 30rem;
+    font-size: .9rem;
+  }
+  th, td {
+    text-align: left;
+    vertical-align: top;
+    padding: .5rem .7rem .5rem 0;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  th {
+    font-family: var(--mono);
+    font-size: .64rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 400;
+    border-bottom-color: var(--rule);
+    white-space: nowrap;
+  }
+  td.mono, .tabular { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: .85rem; }
+  tr:last-child td { border-bottom: 0; }
+
+  /* ---------- data readout ---------- */
+  .readout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+    gap: 1px;
+    background: var(--rule-soft);
+    border: 1px solid var(--rule-soft);
+  }
+  .readout div {
+    background: var(--surface);
+    padding: .8rem .85rem;
+  }
+  .readout dt {
+    font-family: var(--mono);
+    font-size: .6rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: .3rem;
+  }
+  .readout dd {
+    margin: 0;
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 1.05rem;
+    color: var(--ink);
+  }
+  .readout dd small { display: block; font-family: var(--body); font-size: .72rem; color: var(--ink-soft); margin-top: .25rem; letter-spacing: 0; }
+
+  /* ---------- pills ---------- */
+  .pill {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: .64rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: .16rem .45rem;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .pill.req  { background: var(--magenta); color: var(--surface); }
+  .pill.opt  { background: var(--shoal); color: var(--ink-soft); }
+  .pill.red  { background: var(--buoy-red); color: #fff; }
+  .pill.green{ background: var(--buoy-green); color: #fff; }
+
+  /* ---------- checklist ---------- */
+  .check { list-style: none; padding-left: 0; gap: .45rem; }
+  .check li {
+    display: grid;
+    grid-template-columns: 1.1rem 1fr;
+    gap: .6rem;
+    align-items: start;
+    font-size: .95rem;
+  }
+  .check li::before {
+    content: "";
+    width: .8rem; height: .8rem;
+    margin-top: .35rem;
+    border: 1px solid var(--ink-faint);
+    border-radius: 1px;
+  }
+
+  /* ---------- the MAYDAY / emergency card ---------- */
+  .card-mono {
+    font-family: var(--mono);
+    font-size: .82rem;
+    line-height: 1.7;
+    background: var(--water);
+    border: 1px solid var(--rule);
+    padding: 1rem;
+    white-space: pre-wrap;
+    overflow-x: auto;
+  }
+  .card-mono b { color: var(--magenta); }
+
+  /* ---------- points of sail diagram ---------- */
+  .diagram { width: 100%; height: auto; display: block; }
+  .diagram .zone      { fill: var(--shoal); }
+  .diagram .ray       { stroke: var(--rule); stroke-width: 1; }
+  .diagram .rim       { fill: none; stroke: var(--rule); stroke-width: 1; stroke-dasharray: 2 4; }
+  .diagram .hull      { fill: var(--surface); stroke: var(--ink); stroke-width: 1.4; }
+  .diagram .hull-run  { fill: var(--magenta-bg); stroke: var(--magenta); stroke-width: 1.4; }
+  .diagram .windarrow { stroke: var(--magenta); stroke-width: 2; fill: none; }
+  .diagram .windfill  { fill: var(--magenta); }
+  .diagram .lbl       { font-family: var(--body); font-size: 13px; font-weight: 700; fill: var(--ink); }
+  .diagram .lbl-ua    { font-family: var(--body); font-size: 11.5px; fill: var(--ink-soft); }
+  .diagram .lbl-deg   { font-family: var(--mono); font-size: 10.5px; fill: var(--ink-faint); }
+  .diagram .lbl-zone  { font-family: var(--body); font-size: 12px; font-weight: 700; fill: var(--ink-soft); }
+  .diagram .lbl-tack  { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; fill: var(--ink-faint); }
+  .diagram .lbl-wind  { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; fill: var(--magenta); }
+
+  /* ---------- footer ---------- */
+  footer {
+    border-top: 1px solid var(--rule);
+    background: var(--surface);
+    padding: var(--pad);
+    margin-top: .8rem;
+  }
+  .footer-inner {
+    max-width: 1080px; margin: 0 auto;
+    display: flex; flex-direction: column; gap: .7rem;
+    font-size: .87rem; color: var(--ink-soft);
+  }
+  .footer-inner p { margin: 0; max-width: var(--measure); }
+
+  .warn {
+    background: var(--magenta-bg);
+    border: 1px solid var(--magenta);
+    border-radius: 2px;
+    padding: .9rem 1rem;
+    font-size: .9rem;
+  }
+  .warn p { margin: 0; max-width: var(--measure); }
+  .warn p + p { margin-top: .5rem; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+
+<div class="page" data-lang="both">
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <p class="eyebrow">Halifax, Nova Scotia · Quick reference</p>
+      <h1>Deck Card</h1>
+      <p class="h1-ua">Палубна картка — довідник яхтсмена</p>
+      <p class="standfirst">
+        <span class="en">The things you need at the dock, on the water, or in a hurry — pulled out of the full course so they fit on a phone. Every card is in English and Ukrainian.</span>
+        <span class="ua">Те, що потрібно на причалі, на воді або в спішці — витягнуто з повного курсу так, щоб влізло в телефон. Кожна картка англійською та українською.</span>
+      </p>
+      <div class="switch">
+        <span class="switch-label">Language</span>
+        <div class="switch-group" role="group" aria-label="Language">
+          <button type="button" data-set="both" aria-pressed="true">EN + UA</button>
+          <button type="button" data-set="en" aria-pressed="false">English</button>
+          <button type="button" data-set="ua" aria-pressed="false">Українська</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ============ THIS WEEK ============ -->
+    <section class="panel accent">
+      <p class="panel-label">Start here · Почніть тут</p>
+      <h2>
+        <span class="en">What to do this week</span><span class="ua h2-ua">Що зробити цього тижня</span>
+        <span class="ua-sub en">It is late July. The Halifax season is at its best right now.</span>
+      </h2>
+      <p class="lede en">You do not need to study all winter before you sail. August and September are arguably the best months here — the heavy June/July fog has eased, the water is at its warmest, and the sea breeze is reliable. You have about three months of usable season left.</p>
+      <p class="lede ua">Не потрібно вчитися всю зиму, перш ніж вийти на воду. Серпень і вересень — імовірно найкращі місяці тут: густий туман червня та липня спав, вода найтепліша, а морський бриз надійний. У вас залишилося близько трьох місяців придатного сезону.</p>
+
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr><th>№</th><th>Action</th><th>Why now</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="num">01</td>
+              <td>
+                <strong class="en">Complete the PCOC online</strong>
+                <strong class="ua">Пройдіть PCOC онлайн</strong>
+                <div class="ua">Акредитований провайдер Transport Canada</div>
+              </td>
+              <td>
+                <span class="en">3–6 hours, one evening, $40–70. Valid for life. It is the card the law actually requires — get it out of the way so it never blocks you.</span>
+                <span class="ua">3–6 годин, один вечір, $40–70. Дійсна пожиттєво. Це картка, яку справді вимагає закон.</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">02</td>
+              <td>
+                <strong class="en">Read the cold-water card</strong>
+                <strong class="ua">Прочитайте картку холодної води</strong>
+              </td>
+              <td>
+                <span class="en">Halifax water can disable you in ten minutes in the middle of summer. This is the one thing not to defer.</span>
+                <span class="ua">Вода Галіфаксу може позбавити вас дієздатності за десять хвилин посеред літа. Це те, що не можна відкладати.</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">03</td>
+              <td>
+                <strong class="en">Email three schools</strong>
+                <strong class="ua">Напишіть трьом школам</strong>
+                <div class="ua">Armdale YC · RNSYS · Dartmouth YC · Nova Sail</div>
+              </td>
+              <td>
+                <span class="en">Ask for August/September spots, cancellations, and a waitlist. Late-season places open up and go to whoever asked.</span>
+                <span class="ua">Питайте про місця на серпень/вересень, відмови та список очікування. Місця в кінці сезону дістаються тому, хто запитав.</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">04</td>
+              <td>
+                <strong class="en">Book a "Try Sailing" session</strong>
+                <strong class="ua">Забронюйте ознайомчий вихід</strong>
+              </td>
+              <td>
+                <span class="en">Two hours on the Northwest Arm, low cost, no commitment. Turns abstract interest into a real decision.</span>
+                <span class="ua">Дві години на Northwest Arm, недорого, без зобов'язань.</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">05</td>
+              <td>
+                <strong class="en">Crew at a Wednesday club race</strong>
+                <strong class="ua">Ідіть екіпажем на клубну гонку в середу</strong>
+              </td>
+              <td>
+                <span class="en"><strong>Free, and the fastest way to get hours.</strong> Skippers are chronically short of crew. Say: "I'm brand new, I'll do exactly what you tell me, I want to learn."</span>
+                <span class="ua"><strong>Безкоштовно і найшвидший спосіб набрати години.</strong> Шкіперам постійно не вистачає екіпажу. Скажіть: «Я новачок, робитиму точно те, що скажете, хочу вчитися.»</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ PAPERS ============ -->
+    <section class="panel">
+      <p class="panel-label">Documents · Документи</p>
+      <h2>
+        <span class="en">There is no "sailboat licence"</span><span class="ua h2-ua">«Прав на вітрильник» не існує</span>
+      </h2>
+      <p class="en">Canada separates the <em>legal permission</em> from the <em>demonstrated skill</em>. You need both, and they come from different places. The PCOC is a licence for <strong>you</strong>; the PCL is a licence for <strong>the boat</strong>; Sail Canada certifies that you can actually sail.</p>
+      <p class="ua">Канада розділяє <em>юридичний дозвіл</em> і <em>підтверджену майстерність</em>. Потрібні обидва, і вони з різних джерел. PCOC — це ліцензія для <strong>вас</strong>; PCL — ліцензія для <strong>судна</strong>; Sail Canada підтверджує, що ви справді вмієте ходити під вітрилами.</p>
+
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr><th>Document</th><th>Required?</th><th>Covers</th><th>Cost / Validity</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>PCOC</strong><br><span class="ua">картка оператора</span></td>
+              <td><span class="pill req">By law</span></td>
+              <td><span class="en">Operating any pleasure craft <em>fitted</em> with a motor — including a sailboat with an auxiliary, even with the engine off.</span><span class="ua">Керування будь-яким прогулянковим судном, <em>оснащеним</em> двигуном — включно з вітрильником з допоміжним, навіть при вимкненому двигуні.</span></td>
+              <td class="mono">$40–70<br>for life</td>
+            </tr>
+            <tr>
+              <td><strong>PCL</strong><br><span class="ua">ліцензія судна</span></td>
+              <td><span class="pill req">By law</span></td>
+              <td><span class="en">Registers the hull. Required for engines ≥10 hp / 7.5 kW. Number displayed on the bow.</span><span class="ua">Реєструє корпус. Обов'язкова для двигунів ≥10 к.с. / 7,5 кВт. Номер на носі.</span></td>
+              <td class="mono">Free<br>renew 10 yrs</td>
+            </tr>
+            <tr>
+              <td><strong>ROC(M)</strong><br><span class="ua">радіооператор</span></td>
+              <td><span class="pill req">To transmit</span></td>
+              <td><span class="en">Operating a marine VHF radio. One per <em>person</em>, not per boat. Via CPS‑ECP.</span><span class="ua">Робота на морській VHF. Один на <em>людину</em>, не на судно. Через CPS‑ECP.</span></td>
+              <td class="mono">$75–150<br>for life</td>
+            </tr>
+            <tr>
+              <td><strong>Sail Canada</strong><br><span class="ua">сертифікати</span></td>
+              <td><span class="pill opt">Not legally</span></td>
+              <td><span class="en">Actual sailing competence. What clubs, insurers and charter companies ask for.</span><span class="ua">Справжня вітрильна компетентність. Те, що запитують клуби, страховики й чартерні компанії.</span></td>
+              <td class="mono">see ladder</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3><span class="en">The Sail Canada ladder</span><span class="ua">Драбина Sail Canada</span></h3>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Level</th><th>You can</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Start Keelboating</strong></td><td><span class="en">Sail a small keelboat as competent crew.</span><span class="ua">Ходити на малій кільовій яхті як компетентний член екіпажу.</span></td></tr>
+            <tr><td><strong>Basic Cruising</strong><br><span class="pill req">first real milestone</span></td><td><span class="en"><strong>Skipper</strong> a 6–10 m sloop with an engine, by day, in moderate wind, in familiar waters.</span><span class="ua"><strong>Бути шкіпером</strong> шлюпа 6–10 м з двигуном, вдень, при помірному вітрі, у знайомих водах.</span></td></tr>
+            <tr><td><strong>Intermediate Cruising</strong></td><td><span class="en">Skipper a 9–12 m yacht, coastal, by day — <strong>the bareboat charter level</strong>.</span><span class="ua">Бути шкіпером яхти 9–12 м, прибережно, вдень — <strong>рівень бербоут-чартеру</strong>.</span></td></tr>
+            <tr><td><strong>Advanced Cruising</strong></td><td><span class="en">Extended coastal passages, including <strong>at night</strong>.</span><span class="ua">Тривалі прибережні переходи, включно з <strong>нічними</strong>.</span></td></tr>
+            <tr><td><strong>Offshore</strong></td><td><span class="en">Offshore passages, watch systems, heavy weather.</span><span class="ua">Океанські переходи, вахти, важка погода.</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ COLD WATER ============ -->
+    <section class="panel danger">
+      <p class="panel-label">Survival · Виживання</p>
+      <h2>
+        <span class="en">1 · 10 · 1 — cold water</span><span class="ua h2-ua">1 · 10 · 1 — холодна вода</span>
+      </h2>
+      <p class="en">Halifax Harbour reaches only about <strong>12–18 °C at its warmest</strong>, and is 8–12 °C in June. Most boating deaths here are people who fell in without a lifejacket on a calm, fair-weather day close to shore. It is not storms.</p>
+      <p class="ua">Гавань Галіфаксу досягає лише приблизно <strong>12–18 °C у найтеплішу пору</strong>, а в червні це 8–12 °C. Більшість смертей тут — люди, які впали у воду без жилета спокійного погожого дня біля берега. Це не шторми.</p>
+
+      <dl class="readout">
+        <div>
+          <dt>1 minute</dt>
+          <dd>Cold shock
+            <small class="en">Get your breathing under control. The gasp reflex is what drowns people — not hypothermia. Don't swim, don't thrash. Face out of the water, grab anything buoyant, slow your breathing. It passes.</small>
+            <small class="ua">Візьміть дихання під контроль. Саме рефлекс вдиху топить людей, а не гіпотермія. Не пливіть, не борсайтесь. Обличчя з води, схопіться за плавуче, сповільніть дихання.</small>
+          </dd>
+        </div>
+        <div>
+          <dt>10 minutes</dt>
+          <dd>Useful hands
+            <small class="en">Meaningful movement before cold incapacitation. Fingers go first, then grip, then arms — while you are still fully conscious. Do the thing that needs hands <em>now</em>: clip on, grab the line, blow the whistle.</small>
+            <small class="ua">Осмислені рухи до холодової недієздатності. Спочатку пальці, потім хват, потім руки — при повній свідомості. Робіть те, що вимагає рук, <em>зараз</em>.</small>
+          </dd>
+        </div>
+        <div>
+          <dt>1 hour</dt>
+          <dd>Consciousness
+            <small class="en">Before hypothermia takes you under. Long enough to be rescued <strong>if you are wearing a PFD</strong>. Adopt HELP: knees to chest, arms crossed and pressed in. Never swim to keep warm — it dumps heat three times faster.</small>
+            <small class="ua">До втрати свідомості від гіпотермії. Достатньо довго, щоб вас врятували, <strong>якщо на вас жилет</strong>. Поза HELP: коліна до грудей, руки схрещені й притиснуті. Ніколи не пливіть, щоб зігрітися.</small>
+          </dd>
+        </div>
+      </dl>
+
+      <div class="warn">
+        <p class="en"><strong>Wear the PFD, don't just carry it.</strong> The law requires one per person aboard; it does not require adults to wear it. That gap is where people die — a lifejacket in a locker while you are in the water is decoration. The best PFD is the one comfortable enough that you keep it on for six hours.</p>
+        <p class="ua"><strong>Носіть жилет, а не просто майте його.</strong> Закон вимагає один на людину на борту; він не вимагає, щоб дорослі його надівали. Саме в цій прогалині гинуть люди — жилет у рундуку, поки ви у воді, це декорація.</p>
+      </div>
+    </section>
+
+    <!-- ============ FAMILY ============ -->
+    <section class="panel danger">
+      <p class="panel-label">Family · Родина</p>
+      <h2>
+        <span class="en">Sailing with a child</span><span class="ua h2-ua">Плавання з дитиною</span>
+        <span class="ua-sub en">The rules are not the same as for an adult</span>
+      </h2>
+
+      <p class="lede en"><strong>A child loses body heat significantly faster than an adult in the same water</strong> — more surface area relative to body mass, less insulating fat, thinner skin. The 1‑10‑1 figures above are the <em>adult</em> numbers. For an 8-year-old in Halifax water, assume considerably less time in every phase.</p>
+      <p class="lede ua"><strong>Дитина втрачає тепло значно швидше за дорослого в тій самій воді</strong> — більша площа поверхні відносно маси тіла, менше жиру, тонша шкіра. Числа 1‑10‑1 вище — для *дорослого*. Для 8-річної дитини у воді Галіфаксу припускайте істотно менше часу в кожній фазі.</p>
+
+      <div class="warn">
+        <p class="en"><strong>For an adult, wearing a PFD is a judgement call. For a child it is not.</strong> It is always on, on deck, no discussion, no exceptions — <strong>including at the dock and at anchor</strong>. Most child drownings around boats happen at rest, not under sail: stepping across a gap, leaning over, slipping on a wet dock. Make it non-negotiable from day one and it never becomes an argument.</p>
+        <p class="ua"><strong>Для дорослого жилет — це рішення. Для дитини — ні.</strong> Він завжди надітий на палубі, без обговорень, без винятків — <strong>включно з причалом і якірною стоянкою</strong>. Більшість утоплень дітей біля суден трапляється на стоянці, а не під вітрилами. Зробіть це предметом без обговорення з першого дня.</p>
+      </div>
+
+      <h3><span class="en">Choosing her PFD</span><span class="ua">Вибір її жилета</span></h3>
+      <div class="scroll">
+        <table>
+          <tbody>
+            <tr><td><strong>Sized by WEIGHT</strong></td><td><span class="en">Not by age. Read the label's weight range. <span class="pill red">common mistake</span></span><span class="ua">Не за віком. Читайте діапазон ваги на етикетці.</span></td></tr>
+            <tr><td><strong>Crotch strap</strong></td><td><span class="en"><strong>Essential, and fasten it.</strong> Without one she can slip out, or it rides up over her face. A PFD she can fall out of is worse than useless — you'll believe she's protected.</span><span class="ua"><strong>Обов'язкова, і застібайте її.</strong> Без неї вона може вислизнути, або жилет підніметься на обличчя.</span></td></tr>
+            <tr><td><strong>Large collar</strong></td><td><span class="en">Head support behind the neck — children have proportionally heavy heads and weak neck control when cold.</span><span class="ua">Підголівник — у дітей пропорційно важка голова і слабкий контроль шиї на холоді.</span></td></tr>
+            <tr><td><strong>Foam, not inflatable</strong></td><td><span class="en">No mechanism to fail, needs no action from her, works if unconscious. <strong>Inflatables are not for children.</strong></span><span class="ua">Немає механізму, що підведе, не вимагає дій від неї, працює без свідомості. <strong>Надувні — не для дітей.</strong></span></td></tr>
+            <tr><td><strong>Approved</strong></td><td><span class="en">Label must show Transport Canada, Canadian Coast Guard, or Fisheries and Oceans Canada</span><span class="ua">На етикетці Transport Canada, Canadian Coast Guard або DFO</span></td></tr>
+            <tr><td><strong>Bright + whistle</strong></td><td><span class="en">You're finding a small head in grey water, maybe in fog. She can blow a whistle far longer than she can shout.</span><span class="ua">Ви шукаєте малу голову в сірій воді, можливо в тумані. Свистіти вона може значно довше, ніж кричати.</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="en"><strong>The fit test:</strong> fasten everything, have her raise her arms, then lift firmly on the shoulders. <strong>If it rides up to her ears or over her face, it is too big</strong> — no "she'll grow into it." Then test it <strong>in water</strong>, in a pool or warm shallows, before the season. A child who has already floated in her PFD knows it works; a child whose first experience is falling in the harbour is a child in a panic.</p>
+      <p class="ua"><strong>Тест посадки:</strong> застібніть усе, попросіть підняти руки, потім сильно потягніть за плечі. <strong>Якщо піднімається до вух або на обличчя — завеликий</strong>, без «вона доросте». Потім перевірте <strong>у воді</strong>, у басейні або на теплому мілководді, до сезону.</p>
+
+      <h3><span class="en">Rules aboard</span><span class="ua">Правила на борту</span></h3>
+      <ul class="check">
+        <li><span class="en">PFD on, always, on deck — including at the dock</span><span class="ua">Жилет надітий завжди на палубі — включно з причалом</span></li>
+        <li><span class="en">"One hand for the boat" — make it a game at first</span><span class="ua">«Одна рука для судна» — спочатку зробіть це грою</span></li>
+        <li><span class="en">The foredeck is not somewhere you go while we're sailing</span><span class="ua">Бак — не те місце, куди ходять, коли ми йдемо під вітрилами</span></li>
+        <li><span class="en">A properly-sized <strong>child harness</strong>, tether short enough she can't reach the water</span><span class="ua"><strong>Дитячий страховий пояс</strong> правильного розміру, кінець настільки короткий, щоб не дістати води</span></li>
+        <li><span class="en"><strong>Know exactly where your boom sweeps</strong> — on many boats it passes right through where a child's head is when standing in the cockpit. Practise "gybe-ho → duck" at the dock as a game.</span><span class="ua"><strong>Знайте точно, де проходить ваш ґік</strong> — на багатьох суднах саме там, де голова дитини, що стоїть у кокпіті. Тренуйте «gybe-ho → пригнутися» на причалі як гру.</span></li>
+        <li><span class="en"><strong>Lifeline netting.</strong> Worth fitting even at eight — and it visibly shows her the boat is set up to keep her safe.</span><span class="ua"><strong>Сітка на леєрах.</strong> Варто поставити навіть у вісім — і вона наочно показує їй, що судно налаштоване її захищати.</span></li>
+        <li><span class="en"><strong>Say out loud who is watching her.</strong> "I'm sailing, you're watching her" — so it's never assumed and never dropped by both of you at once.</span><span class="ua"><strong>Кажіть вголос, хто за нею дивиться.</strong> «Я керую, ти дивишся за нею» — щоб це ніколи не було припущенням.</span></li>
+      </ul>
+
+      <h3><span class="en">The family veto</span><span class="ua">Родинне право вето</span></h3>
+      <div class="warn">
+        <p class="en"><strong>Anyone aboard can say "I'd like to go back now," and we go back.</strong> No argument, no persuasion, no sighing, no "just twenty more minutes." Ever. The first time you honour it without complaint you've bought enormous trust; the first time you don't, you've taught your family their comfort is negotiable against your plans.</p>
+        <p class="ua"><strong>Будь-хто на борту може сказати «я хочу повернутися», і ми повертаємось.</strong> Без суперечок, без переконування, без зітхань. Ніколи. Перший раз, коли ви це виконаєте без нарікань, ви купили величезну довіру.</p>
+      </div>
+
+      <h3><span class="en">Design the trip for the least patient person aboard</span><span class="ua">Плануйте похід під найменш терплячу людину на борту</span></h3>
+      <ul class="check">
+        <li><span class="en">Under 10 kt, flat water, warm sunny day — wait for the right day</span><span class="ua">Менше 10 вузлів, рівна вода, теплий сонячний день — чекайте правильного дня</span></li>
+        <li><span class="en"><strong>One to two hours maximum.</strong> Shorter than you want.</span><span class="ua"><strong>Максимум одна-дві години.</strong> Коротше, ніж вам хочеться.</span></li>
+        <li><span class="en"><strong>Reef early and sail flat.</strong> You know the boat can't capsize; they don't, and 20° of heel feels catastrophic.</span><span class="ua"><strong>Беріть риф рано й ідіть рівно.</strong> Ви знаєте, що судно не перевернеться; вони ні, і крен 20° відчувається катастрофою.</span></li>
+        <li><span class="en">Narrate what's about to happen <em>before</em> it happens. Explained heel is fine; surprise heel is terrifying.</span><span class="ua">Прокоментуйте, що зараз станеться, <em>до</em> того. Пояснений крен нормальний, неочікуваний — жахливий.</span></li>
+        <li><span class="en"><strong>Give her real jobs:</strong> the helm (best of all — and it cures seasickness), official lookout, buoy-spotter, log-keeper, snack officer.</span><span class="ua"><strong>Дайте справжню роботу:</strong> штурвал (найкраще — і це лікує морську хворобу), спостерігач, шукач буїв, ведення журналу.</span></li>
+        <li><span class="en"><strong>Boredom is the real enemy.</strong> Snacks before she's hungry, her own boat bag, her own binoculars, a bucket of seawater. Accept the tablet.</span><span class="ua"><strong>Нудьга — справжній ворог.</strong> Перекуски до того, як зголодніє, власна сумка, власний бінокль, відро морської води. Прийміть планшет.</span></li>
+        <li><span class="en"><strong>A destination that isn't sailing</strong> — a beach, a fort to climb, ice cream. Then the sail is the exciting way of getting there.</span><span class="ua"><strong>Пункт призначення, який не є плаванням</strong> — пляж, форт, мороженое. Тоді плавання — це захоплива дорога туди.</span></li>
+        <li><span class="en"><strong>End while it's still fun.</strong> Leave them wanting more, every time.</span><span class="ua"><strong>Закінчуйте, поки ще весело.</strong> Щоразу залишайте бажання ще.</span></li>
+      </ul>
+      <p class="en"><strong>Best family day sail in Halifax: McNabs Island.</strong> A park island in the outer harbour with beaches, historic fortifications to explore, and picnic spots — the sailing is transport to an adventure rather than the point of the day, which is exactly right for an 8-year-old. Default for the first year: <strong>the Northwest Arm</strong>, home in fifteen minutes from anywhere in it.</p>
+      <p class="ua"><strong>Найкращий родинний вихід у Галіфаксі: McNabs Island.</strong> Острів-парк у зовнішній гавані з пляжами, історичними фортифікаціями і місцями для пікніка — плавання є транспортом до пригоди, а не сенсом дня. За замовчуванням на перший рік: <strong>Northwest Arm</strong>, додому за п'ятнадцять хвилин.</p>
+
+      <h3><span class="en">Two structural fixes</span><span class="ua">Два структурні виправлення</span></h3>
+      <p class="en"><strong>1. CANSail for her.</strong> Eight is exactly the entry age. Dartmouth YC runs CANSail 1–6 for ages 8–18 in Optimists and Club 420s (plus "Wetfeet" for 5–8); AYC Sailing School runs Junior Sailing from age 5 on the sheltered Northwest Arm, and membership isn't required. She'll get better than you within a season — a dinghy gives instant feedback a keelboat can't. More importantly it becomes <em>her</em> thing rather than your hobby she's dragged along to. <strong>Book in January or February for the following summer.</strong></p>
+      <p class="ua"><strong>1. CANSail для неї.</strong> Вісім — саме вік входу. Dartmouth YC: CANSail 1–6 для 8–18 років на Optimist і Club 420 (плюс «Wetfeet» для 5–8); AYC Sailing School: Junior Sailing з 5 років на захищеному Northwest Arm, членство не потрібне. Вона стане кращою за вас за один сезон. Головніше — це стає <em>її</em> справою, а не вашим хобі, куди її тягнуть. <strong>Бронюйте в січні–лютому на наступне літо.</strong></p>
+      <p class="en"><strong>2. Your partner must be able to get the boat home without you.</strong> Whether or not they want to "learn to sail," this is not optional: <strong>a skipper who is the single point of failure on a boat carrying a child has built an unsafe system.</strong> They must be able to, alone and unprompted — start the engine and steer home, drop the sails, send a MAYDAY on Ch 16, press MOB and read the position, recover a person from the water, and find every piece of safety gear. <strong>Practise it once a season:</strong> sit down, hands off, and say <em>"I'm out of action. Take us home."</em> Better still, have them do the PCOC alongside you and Start Keelboating together — two competent skippers is a fundamentally safer boat, and a shared activity lasts where a tolerated hobby doesn't.</p>
+      <p class="ua"><strong>2. Ваш партнер мусить зуміти привести судно додому без вас.</strong> Незалежно від того, чи хочуть вони «вчитися ходити під вітрилами», це не опційно: <strong>шкіпер, який є єдиною точкою відмови на судні з дитиною, побудував небезпечну систему.</strong> Вони мусять уміти самостійно: запустити двигун і привести додому, спустити вітрила, передати MAYDAY на 16, натиснути MOB і зчитати позицію, підняти людину з води, знайти все спорядження безпеки. <strong>Тренуйте раз на сезон:</strong> сядьте, руки геть, і скажіть <em>«Я вийшов зі строю. Веди нас додому.»</em> А краще — нехай зроблять PCOC разом з вами і Start Keelboating разом.</p>
+    </section>
+
+    <!-- ============ POINTS OF SAIL ============ -->
+    <section class="panel">
+      <p class="panel-label">Fundamentals · Основи</p>
+      <h2>
+        <span class="en">Points of sail</span><span class="ua h2-ua">Курси відносно вітру</span>
+        <span class="ua-sub en">Your angle to the wind — not a compass direction</span>
+      </h2>
+      <p class="en">A sail is a <strong>wing, not a bag</strong>: it generates lift, and that lift points mostly sideways. The keel converts that sideways force into forward motion. That is why a boat can sail towards the wind — but never straight into it.</p>
+      <p class="ua">Вітрило — це <strong>крило, а не мішок</strong>: воно створює підйомну силу, спрямовану переважно вбік. Кіль перетворює цю бокову силу на рух уперед. Саме тому судно може йти до вітру — але ніколи прямо проти нього.</p>
+
+      <svg class="diagram" viewBox="0 0 560 500" role="img"
+           aria-label="Points of sail diagram: a 90-degree no-go zone facing the wind, then close-hauled at about 45 degrees, close reach, beam reach at 90 degrees, broad reach at about 135 degrees, and running at 180 degrees dead downwind.">
+        <!-- wind arrow -->
+        <g>
+          <line class="windarrow" x1="280" y1="14" x2="280" y2="58"/>
+          <polygon class="windfill" points="280,68 274,52 286,52"/>
+          <text class="lbl-wind" x="296" y="40">WIND · ВІТЕР</text>
+        </g>
+
+        <!-- no-go zone: 45 deg either side of the wind -->
+        <path class="zone" d="M280,235 L202.2,157.2 A110,110 0 0,1 357.8,157.2 Z"/>
+        <text class="lbl-zone" x="280" y="150" text-anchor="middle">NO-GO ZONE</text>
+        <text class="lbl-ua"   x="280" y="166" text-anchor="middle">мертва зона · ~90°</text>
+        <text class="lbl-deg"  x="280" y="182" text-anchor="middle">sails just flap</text>
+
+        <!-- dashed rim -->
+        <circle class="rim" cx="280" cy="235" r="110"/>
+
+        <!-- rays -->
+        <g class="ray">
+          <line x1="280" y1="235" x2="202.2" y2="157.2"/>
+          <line x1="280" y1="235" x2="357.8" y2="157.2"/>
+          <line x1="280" y1="235" x2="170"   y2="235"/>
+          <line x1="280" y1="235" x2="390"   y2="235"/>
+          <line x1="280" y1="235" x2="202.2" y2="312.8"/>
+          <line x1="280" y1="235" x2="357.8" y2="312.8"/>
+          <line x1="280" y1="235" x2="280"   y2="345"/>
+        </g>
+
+        <!-- boat markers: small hulls, bow pointing along each ray -->
+        <g>
+          <ellipse class="hull"     cx="357.8" cy="157.2" rx="5" ry="9" transform="rotate(45 357.8 157.2)"/>
+          <ellipse class="hull"     cx="390"   cy="235"   rx="5" ry="9" transform="rotate(90 390 235)"/>
+          <ellipse class="hull"     cx="357.8" cy="312.8" rx="5" ry="9" transform="rotate(135 357.8 312.8)"/>
+          <ellipse class="hull-run" cx="280"   cy="345"   rx="5" ry="9"/>
+          <ellipse class="hull"     cx="202.2" cy="157.2" rx="5" ry="9" transform="rotate(-45 202.2 157.2)"/>
+          <ellipse class="hull"     cx="170"   cy="235"   rx="5" ry="9" transform="rotate(-90 170 235)"/>
+          <ellipse class="hull"     cx="202.2" cy="312.8" rx="5" ry="9" transform="rotate(-135 202.2 312.8)"/>
+        </g>
+
+        <!-- starboard-side labels -->
+        <g text-anchor="start">
+          <text class="lbl"     x="374" y="128">CLOSE-HAULED</text>
+          <text class="lbl-ua"  x="374" y="143">крутий бейдевінд</text>
+          <text class="lbl-deg" x="374" y="157">~45° · sheets in hard</text>
+
+          <text class="lbl"     x="404" y="222">BEAM REACH</text>
+          <text class="lbl-ua"  x="404" y="237">галфвінд</text>
+          <text class="lbl-deg" x="404" y="251">90° · usually fastest</text>
+
+          <text class="lbl"     x="374" y="330">BROAD REACH</text>
+          <text class="lbl-ua"  x="374" y="345">бакштаг</text>
+          <text class="lbl-deg" x="374" y="359">~135° · fast, stable</text>
+        </g>
+
+        <!-- running label, centred below -->
+        <g text-anchor="middle">
+          <text class="lbl"     x="280" y="372">RUNNING</text>
+          <text class="lbl-ua"  x="280" y="387">фордевінд</text>
+          <text class="lbl-deg" x="280" y="401">180° · least stable — gybe risk</text>
+        </g>
+
+        <!-- tack sectors -->
+        <text class="lbl-tack" x="150" y="440" text-anchor="start">PORT TACK · ЛІВИЙ ГАЛС</text>
+        <text class="lbl-tack" x="150" y="456" text-anchor="start">wind from port · boom to starboard</text>
+        <text class="lbl-tack" x="410" y="440" text-anchor="end">STARBOARD TACK · ПРАВИЙ ГАЛС</text>
+        <text class="lbl-tack" x="410" y="456" text-anchor="end">wind from starboard · boom to port</text>
+        <line class="ray" x1="280" y1="425" x2="280" y2="470"/>
+      </svg>
+
+      <div class="warn">
+        <p class="en"><strong>The one-sentence rule of trim:</strong> the further you turn away from the wind, the further out you let the sails. Close-hauled, sails are near the centreline; running, they're all the way out.</p>
+        <p class="ua"><strong>Правило налаштування одним реченням:</strong> чим далі ви повертаєте від вітру, тим далі випускаєте вітрила.</p>
+      </div>
+
+      <h3><span class="en">How to trim any sail, on any boat</span><span class="ua">Як налаштувати будь-яке вітрило</span></h3>
+      <ol>
+        <li><span class="en"><strong>Ease</strong> the sheet until the sail's leading edge starts to flutter.</span><span class="ua"><strong>Травіть</strong> шкот, доки передня шкаторина не почне тріпотіти.</span></li>
+        <li><span class="en"><strong>Trim</strong> back in just until the fluttering stops.</span><span class="ua"><strong>Доберіть</strong> назад рівно настільки, щоб тріпотіння припинилося.</span></li>
+        <li><span class="en">That's correct trim. Re-do it every time the course or the wind changes — which is constantly. Trim is an activity, not a setting.</span><span class="ua">Це і є правильне налаштування. Повторюйте щоразу при зміні курсу або вітру — а це постійно. Налаштування — це діяльність, а не установка.</span></li>
+      </ol>
+      <p class="en"><strong>When in doubt, ease.</strong> Almost every beginner sheets in too hard, because a tight sail looks correct. An over-trimmed sail produces heel and drag instead of drive.</p>
+      <p class="ua"><strong>Коли сумніваєтесь — травіть.</strong> Майже кожен новачок добирає задалеко, бо натягнуте вітрило виглядає правильним. Перебране вітрило дає крен і опір замість тяги.</p>
+    </section>
+
+    <!-- ============ RIGHT OF WAY + BUOYS ============ -->
+    <div class="grid two">
+
+      <section class="panel">
+        <p class="panel-label">Rules · Правила</p>
+        <h2>
+          <span class="en">Who gives way</span><span class="ua h2-ua">Хто уступає дорогу</span>
+        </h2>
+
+        <h3><span class="en">Sail meets sail</span><span class="ua">Вітрильник — вітрильник</span></h3>
+        <ul class="bare">
+          <li><span class="en"><strong>Different tacks →</strong> the boat on <strong>port tack gives way</strong>. Starboard tack has right of way. This is the most-used rule in sailing.</span><span class="ua"><strong>Різні галси →</strong> судно на <strong>лівому галсі уступає</strong>. Правий галс має перевагу. Це найчастіше правило.</span></li>
+          <li><span class="en"><strong>Same tack →</strong> the <strong>windward boat gives way</strong>. Leeward has right of way.</span><span class="ua"><strong>Однаковий галс →</strong> <strong>навітряне судно уступає</strong>. Підвітряне має перевагу.</span></li>
+          <li><span class="en"><strong>On port and can't tell their tack →</strong> you give way anyway.</span><span class="ua"><strong>Ви на лівому і не можете визначити їхній галс →</strong> уступайте все одно.</span></li>
+        </ul>
+
+        <h3><span class="en">Under engine</span><span class="ua">Під двигуном</span></h3>
+        <ul class="bare">
+          <li><span class="en"><strong>Head-on →</strong> both alter to <strong>starboard</strong>, pass port-to-port.</span><span class="ua"><strong>Зустрічні →</strong> обидва праворуч, розходяться лівими бортами.</span></li>
+          <li><span class="en"><strong>Crossing →</strong> the vessel with the other on her <strong>own starboard side</strong> gives way, and passes astern. At night: see her <span class="pill red">red</span> and you give way; see her <span class="pill green">green</span> and you stand on.</span><span class="ua"><strong>Перетинні →</strong> судно, яке має інше зі свого <strong>правого борту</strong>, уступає і проходить за кормою. Уночі: бачите <span class="pill red">червоний</span> — уступаєте; <span class="pill green">зелений</span> — зберігаєте курс.</span></li>
+          <li><span class="en"><strong>Overtaking →</strong> the overtaking vessel keeps clear, sail or power.</span><span class="ua"><strong>Обгін →</strong> судно, що обганяє, тримається чисто, вітрило чи двигун.</span></li>
+        </ul>
+
+        <div class="warn">
+          <p class="en"><strong>A sailboat with its engine in gear is a power-driven vessel</strong> — even with the sails up. You have no sailing privileges. And "being in the right" is no defence if you collide: if holding your course leads to a collision, you must act regardless of who had right of way.</p>
+          <p class="ua"><strong>Вітрильник із включеним двигуном — це судно з механічним двигуном</strong>, навіть з піднятими вітрилами. Ви не маєте привілеїв вітрильника. І «бути у своєму праві» не є захистом при зіткненні.</p>
+        </div>
+
+        <h3><span class="en">Halifax reality check</span><span class="ua">Перевірка реальністю: Галіфакс</span></h3>
+        <p class="en">This is a major container and naval port. A loaded ship may need <strong>over a mile to stop</strong>, has a blind zone hundreds of metres ahead of the bow, and physically cannot leave the dredged channel. In a narrow channel, a sailing vessel <strong>shall not impede</strong> her. Stay out of the channel, cross at right angles and <strong>astern, never ahead</strong>, monitor VHF 16 and the traffic channels, and never assume you have been seen.</p>
+        <p class="ua">Це великий контейнерний і військово-морський порт. Завантаженому судну може знадобитися <strong>понад милю на зупинку</strong>, у нього сліпа зона на сотні метрів перед носом, і воно фізично не може вийти з каналу. У вузькому проході вітрильне судно <strong>не повинно перешкоджати</strong> йому. Тримайтеся поза каналом, перетинайте під прямим кутом і <strong>за кормою, ніколи перед носом</strong>, слухайте VHF 16 і канали руху, і ніколи не припускайте, що вас побачили.</p>
+      </section>
+
+      <section class="panel">
+        <p class="panel-label">Buoyage · Система буїв</p>
+        <h2>
+          <span class="en">Red right returning</span><span class="ua h2-ua">Червоний праворуч при поверненні</span>
+          <span class="ua-sub en">Canada is IALA Region B — the opposite of Europe</span>
+        </h2>
+        <p class="en">If you learned buoyage anywhere in Europe, <strong>unlearn it</strong>. In Canada, keep <strong>red markers on your right</strong> when returning to harbour or heading upstream.</p>
+        <p class="ua">Якщо ви вчили систему буїв у Європі — <strong>розучіть її</strong>. У Канаді тримайте <strong>червоні знаки праворуч</strong>, коли повертаєтесь у гавань або йдете вгору за течією.</p>
+
+        <div class="scroll">
+          <table>
+            <thead><tr><th></th><th>Port-hand</th><th>Starboard-hand</th></tr></thead>
+            <tbody>
+              <tr><th>Colour</th><td><span class="pill green">Green</span></td><td><span class="pill red">Red</span></td></tr>
+              <tr><th>Shape</th><td>Can / flat top</td><td>Nun / cone top</td></tr>
+              <tr><th>Numbers</th><td class="mono">Odd — 1, 3, 5</td><td class="mono">Even — 2, 4, 6</td></tr>
+              <tr><th>Returning</th><td><span class="en">keep to your <strong>port</strong></span><span class="ua">тримайте <strong>лівіше</strong></span></td><td><span class="en">keep to your <strong>starboard</strong></span><span class="ua">тримайте <strong>правіше</strong></span></td></tr>
+              <tr><th>Leaving</th><td><span class="en">keep to your <strong>starboard</strong></span><span class="ua">тримайте <strong>правіше</strong></span></td><td><span class="en">keep to your <strong>port</strong></span><span class="ua">тримайте <strong>лівіше</strong></span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="en"><strong>Leaving Halifax Harbour for the sea, everything reverses.</strong> "Red right" is relative to your direction of travel, not absolute. Outbound, recite <em>"red left leaving"</em>.</p>
+        <p class="ua"><strong>Виходячи з гавані в море, усе змінюється навпаки.</strong> «Червоний праворуч» відносно напрямку руху, а не абсолютно.</p>
+
+        <h3><span class="en">Canada's own orange buoys</span><span class="ua">Канадські оранжеві буї</span></h3>
+        <p class="en">White with orange bands, and the <em>shape</em> in the middle carries the meaning. These don't exist in most of the world and they are very likely on your PCOC exam.</p>
+        <p class="ua">Білі з оранжевими смугами, і <em>фігура</em> в центрі несе значення. Їх немає в більшій частині світу і вони дуже ймовірні на екзамені PCOC.</p>
+        <div class="scroll">
+          <table>
+            <tbody>
+              <tr><td><strong>◇ Diamond</strong></td><td><span class="en">Danger — nature written inside</span><span class="ua">Небезпека — вказана всередині</span></td></tr>
+              <tr><td><strong>◇ + cross</strong></td><td><span class="en"><strong>Keep out</strong> — entry prohibited</span><span class="ua"><strong>Вхід заборонено</strong></span></td></tr>
+              <tr><td><strong>○ Circle</strong></td><td><span class="en">Controlled area — a restriction applies</span><span class="ua">Зона обмежень</span></td></tr>
+              <tr><td><strong>□ Square</strong></td><td><span class="en">Information — directions, names, distances</span><span class="ua">Інформація</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- ============ COMMANDS ============ -->
+    <section class="panel">
+      <p class="panel-label">On the water · На воді</p>
+      <h2>
+        <span class="en">The commands, verbatim</span><span class="ua h2-ua">Команди дослівно</span>
+        <span class="ua-sub en">Your instructor will shout these in English. Learn them as sounds, not translations.</span>
+      </h2>
+      <p class="ua">Ваш інструктор кричатиме це англійською. Вивчіть їх як звуки, а не як переклад — на воді немає часу перекладати.</p>
+
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Call</th><th>Means</th><th>You do</th></tr></thead>
+          <tbody>
+            <tr><td><strong>"Ready to tack?"</strong><br><span class="tabular">/ "Ready about?"</span></td><td class="ua">Готові до повороту оверштаг?</td><td><span class="en">Get to position, new sheet in hand, old sheet with one turn left. Answer <strong>"Ready!"</strong></span><span class="ua">Займіть місце, новий шкот у руці, на старому один оберт. Відповідайте <strong>«Ready!»</strong></span></td></tr>
+            <tr><td><strong>"Helm's a-lee!"</strong><br><span class="tabular">/ "Lee-oh!" / "Tacking!"</span></td><td class="ua">Кермо під вітер — поворот починається</td><td><span class="en">Release the old jib sheet as it backfills, haul the new one in fast by hand, then winch. <strong>Duck.</strong></span><span class="ua">Віддайте старий шкот, швидко доберіть новий руками, потім лебідкою. <strong>Пірніть.</strong></span></td></tr>
+            <tr><td><strong>"Ready to gybe?"</strong></td><td class="ua">Готові до повороту фордевінд?</td><td><span class="en">Clear both sheets, move out of the boom's path. Answer <strong>"Ready!"</strong></span><span class="ua">Приготуйте обидва шкоти, відійдіть зі шляху ґіка.</span></td></tr>
+            <tr><td><strong>"Gybe-ho!"</strong></td><td class="ua">Поворот фордевінд!</td><td><span class="en"><strong>Duck and stay down.</strong> The boom is crossing.</span><span class="ua"><strong>Пригніться і залишайтесь низько.</strong> Ґік переходить.</span></td></tr>
+            <tr><td><strong>"Ease"</strong></td><td class="ua">Травити (повільно, під контролем)</td><td><span class="en">Let the sheet out slowly, keeping a turn on.</span><span class="ua">Випускайте шкот повільно, тримаючи оберт.</span></td></tr>
+            <tr><td><strong>"Trim" / "Sheet in"</strong></td><td class="ua">Добрати</td><td><span class="en">Pull the sheet in.</span><span class="ua">Підтягніть шкот.</span></td></tr>
+            <tr><td><strong>"Head up" / "Luff up"</strong></td><td class="ua">До вітру</td><td><span class="en">Turn towards the wind — <em>and trim sails in</em> as you do.</span><span class="ua">Повертайте до вітру — <em>і добирайте вітрила</em> одночасно.</span></td></tr>
+            <tr><td><strong>"Bear away" / "Bear off"</strong></td><td class="ua">Від вітру</td><td><span class="en">Turn away from the wind — <em>and ease sails out</em> as you do.</span><span class="ua">Повертайте від вітру — <em>і травіть вітрила</em> одночасно.</span></td></tr>
+            <tr><td><strong>"Starboard!"</strong></td><td class="ua">Правий галс — у мене перевага</td><td><span class="en">A legitimate hail, not aggression. If it's shouted at you and you're on port, get out of the way.</span><span class="ua">Законний окрик, не агресія. Якщо кричать вам і ви на лівому галсі — уступіть.</span></td></tr>
+            <tr><td><strong>"Man overboard!"</strong></td><td class="ua">Людина за бортом!</td><td><span class="en">See the emergency card below. Act in seconds.</span><span class="ua">Див. аварійну картку нижче. Дійте за секунди.</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ EMERGENCY ============ -->
+    <div class="grid two">
+
+      <section class="panel danger">
+        <p class="panel-label">Emergency · Аварія</p>
+        <h2>
+          <span class="en">Man overboard</span><span class="ua h2-ua">Людина за бортом</span>
+          <span class="ua-sub en">First five seconds, all at once</span>
+        </h2>
+        <ol>
+          <li><span class="en"><strong>SHOUT</strong> "Man overboard!" — loudly, so the whole crew knows.</span><span class="ua"><strong>КРИЧІТЬ</strong> «Man overboard!» — голосно.</span></li>
+          <li><span class="en"><strong>THROW</strong> flotation immediately — even if it lands far away. It marks the spot. Throw first, think second.</span><span class="ua"><strong>КИНЬТЕ</strong> плавуче негайно — навіть якщо впаде далеко. Це позначає місце.</span></li>
+          <li><span class="en"><strong>PRESS</strong> the MOB button on the plotter.</span><span class="ua"><strong>НАТИСНІТЬ</strong> кнопку MOB на плоттері.</span></li>
+          <li><span class="en"><strong>ASSIGN A SPOTTER</strong> — one person who points at them and does <em>absolutely nothing else</em>. Not steering, not lines. This is the job crews get wrong, and it's the most important one on the boat.</span><span class="ua"><strong>ПРИЗНАЧТЕ СПОСТЕРІГАЧА</strong> — одну людину, яка показує на них і не робить <em>більше нічого</em>. Це найважливіша робота на судні.</span></li>
+          <li><span class="en"><strong>DO NOT LOSE SIGHT.</strong> A head in the water disappears at 50 m in a moderate sea.</span><span class="ua"><strong>НЕ ВТРАЧАЙТЕ З ВИДУ.</strong> Голова у воді зникає на 50 м при помірній хвилі.</span></li>
+        </ol>
+        <p class="en">Then <strong>Quick Stop</strong>: head up, tack leaving the jib backed, come back and approach <strong>from downwind</strong> on a close reach so you can control speed by luffing. Stop with them on the <strong>leeward side, just forward of amidships</strong>. <strong>Engine in neutral</strong> before they're near the stern.</p>
+        <p class="ua">Далі <strong>Quick Stop</strong>: до вітру, оверштаг зі стакселем «навпаки», повернутися і підходити <strong>з підвітряного боку</strong> на повному бейдевінді. Зупинитись так, щоб людина була з <strong>підвітряного борту, трохи попереду міделя</strong>. <strong>Двигун у нейтраль</strong>, перш ніж вона буде біля корми.</p>
+        <div class="warn">
+          <p class="en"><strong>Getting them aboard is the hard part.</strong> A cold, wet adult cannot help you — their hands stopped working ten minutes ago. <strong>Secure them to the boat first</strong>, then lift with a halyard and a winch. Keep them horizontal. Target: under three minutes, practised repeatedly with a fender.</p>
+          <p class="ua"><strong>Підняти на борт — найважче.</strong> Замерзла мокра доросла людина не може вам допомогти. <strong>Спочатку закріпіть її до судна</strong>, потім піднімайте фалом і лебідкою. Тримайте горизонтально. Цільовий час — менше трьох хвилин.</p>
+        </div>
+      </section>
+
+      <section class="panel accent">
+        <p class="panel-label">VHF Channel 16 · High power</p>
+        <h2>
+          <span class="en">MAYDAY</span><span class="ua h2-ua">Сигнал біди</span>
+          <span class="ua-sub en">Copy this and tape it next to the radio</span>
+        </h2>
+        <div class="card-mono">If DSC fitted: lift cover, hold the
+distress button FIRST. Then:
+
+  <b>"MAYDAY, MAYDAY, MAYDAY"</b>
+
+  "THIS IS ____ ____ ____"
+           (boat name ×3)
+
+  "MAYDAY ____"
+           (boat name ×1)
+
+  <b>"MY POSITION IS ____________"</b>
+   (lat/long, or bearing + distance
+    from a known landmark)
+
+  "____________________________"
+           (nature of distress)
+
+  "WE REQUIRE IMMEDIATE ASSISTANCE"
+
+  "____ PERSONS ON BOARD"
+
+  "____________________________"
+   (boat description, colour, other)
+
+  <b>"OVER"</b>
+
+→ Release the button and LISTEN.
+→ No reply in 30 s? Repeat it all.</div>
+        <p class="en"><strong>Position is the one thing that matters most.</strong> Rescuers can find a boat whose problem they don't know; they cannot find a boat whose position they don't know.</p>
+        <p class="ua"><strong>Позиція — найважливіше.</strong> Рятувальники знайдуть судно, чиєї проблеми вони не знають; вони не знайдуть судно, чиєї позиції не знають.</p>
+        <p class="en"><strong>Never hesitate to call.</strong> There is no penalty for a good-faith MAYDAY that turns out less serious than you thought. Rescue services would far rather come out unnecessarily than arrive too late.</p>
+        <p class="ua"><strong>Ніколи не вагайтеся викликати.</strong> Немає покарання за добросовісний MAYDAY, який виявився менш серйозним. Рятувальники охочіше вийдуть даремно, ніж прибудуть занадто пізно.</p>
+        <div class="scroll">
+          <table>
+            <tbody>
+              <tr><td><strong>PAN PAN</strong></td><td><span class="en">Urgency — serious problem, not grave and imminent danger</span><span class="ua">Терміновість — серйозна проблема, не безпосередня загроза життю</span></td></tr>
+              <tr><td><strong>SÉCURITÉ</strong></td><td><span class="en">Safety information — a hazard you've spotted</span><span class="ua">Інформація про безпеку — помічена небезпека</span></td></tr>
+              <tr><td><strong>MAYDAY RELAY</strong></td><td><span class="en">Passing on someone else's distress</span><span class="ua">Передача чужого сигналу біди</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- ============ REEF + FOG ============ -->
+    <div class="grid two">
+
+      <section class="panel">
+        <p class="panel-label">Sail handling · Робота з вітрилами</p>
+        <h2><span class="en">When to reef</span><span class="ua h2-ua">Коли брати риф</span></h2>
+        <p class="lede en"><strong>Reef early, reef often. The time to reef is the first time you think about it.</strong></p>
+        <p class="lede ua"><strong>Беріть риф рано, беріть риф часто. Час брати риф — коли ви вперше про це подумали.</strong></p>
+        <p class="en">Reefing 15 minutes early takes five easy minutes. Reefing 15 minutes late takes twenty frightening ones — the boat is more violent, the deck is wetter, everyone is more tired.</p>
+        <p class="ua">Риф на 15 хвилин раніше — п'ять легких хвилин. Риф на 15 хвилин пізніше — двадцять страшних.</p>
+        <h3><span class="en">You should already have reefed if</span><span class="ua">Риф давно треба було взяти, якщо</span></h3>
+        <ul class="check">
+          <li><span class="en">Heel is consistently over 20–25°</span><span class="ua">Крен постійно понад 20–25°</span></li>
+          <li><span class="en">Heavy weather helm — you're fighting the tiller</span><span class="ua">Сильне навітряне кермо — ви боретесь з румпелем</span></li>
+          <li><span class="en">The leeward rail is going under</span><span class="ua">Підвітряний борт заходить під воду</span></li>
+          <li><span class="en">You're constantly spilling wind to keep control</span><span class="ua">Ви постійно скидаєте вітер, щоб зберегти контроль</span></li>
+          <li><span class="en">The crew have gone quiet</span><span class="ua">Екіпаж замовк</span></li>
+          <li><span class="en"><strong>You are asking yourself whether to reef</strong></span><span class="ua"><strong>Ви питаєте себе, чи не взяти риф</strong></span></li>
+        </ul>
+        <p class="en"><strong>Reduce the headsail too.</strong> Reefing only the main leaves the boat unbalanced with dangerous lee helm.</p>
+        <p class="ua"><strong>Зменшуйте і переднє вітрило.</strong> Риф лише на гроті залишає судно розбалансованим з небезпечним підвітряним кермом.</p>
+      </section>
+
+      <section class="panel">
+        <p class="panel-label">Halifax · Fog · Туман</p>
+        <h2><span class="en">If fog catches you</span><span class="ua h2-ua">Якщо туман застав вас</span></h2>
+        <p class="en">Halifax gets <strong>over 100 days a year</strong> of fog or mist, worst in June and July. Warm air over the cold Labrador Current means it does <strong>not burn off</strong> in sun and can sit for days. Visibility can drop from 10 km to under 100 m in minutes.</p>
+        <p class="ua">У Галіфаксі <strong>понад 100 днів на рік</strong> туману або мли, найгірше в червні й липні. Тепле повітря над холодною Лабрадорською течією означає, що він <strong>не вигорає</strong> на сонці і може триматися днями.</p>
+        <ol>
+          <li><span class="en"><strong>PFDs on everyone.</strong> Immediately, no discussion.</span><span class="ua"><strong>Жилети на всіх.</strong> Негайно, без обговорення.</span></li>
+          <li><span class="en"><strong>Slow down</strong> to a speed you can stop from in the visibility you have.</span><span class="ua"><strong>Зменште швидкість</strong> до такої, з якої можете зупинитися.</span></li>
+          <li><span class="en"><strong>Sound the fog signal</strong> — as a sailing vessel: <span class="tabular">one prolonged + two short</span>, at least every 2 minutes.</span><span class="ua"><strong>Подавайте туманний сигнал</strong> — вітрильне судно: <span class="tabular">один продовжений + два короткі</span>, не рідше кожні 2 хвилини.</span></li>
+          <li><span class="en"><strong>Navigation lights on.</strong></span><span class="ua"><strong>Увімкніть навігаційні вогні.</strong></span></li>
+          <li><span class="en"><strong>Lookout forward</strong>, and stop the engine periodically to <em>listen</em>. Sound is your primary sensor — you'll hear a ship or surf before you see it.</span><span class="ua"><strong>Спостерігач на бак</strong>, періодично зупиняйте двигун, щоб <em>слухати</em>. Слух — ваш основний сенсор.</span></li>
+          <li><span class="en"><strong>Fix your position and log it</strong>, then log course and speed continuously.</span><span class="ua"><strong>Визначте місце і запишіть</strong>, далі ведіть журнал курсу і швидкості.</span></li>
+          <li><span class="en"><strong>Get out of the shipping channel</strong> into shallow water where big ships cannot go. <em>Shallow water is safe water in fog.</em></span><span class="ua"><strong>Вийдіть з суднового ходу</strong> на мілку воду, куди великі судна не можуть. <em>Мілка вода в тумані — безпечна вода.</em></span></li>
+          <li><span class="en"><strong>Radar reflector up.</strong> A fibreglass boat is a weak radar target.</span><span class="ua"><strong>Радарний відбивач нагору.</strong> Скловолоконне судно — слабка радарна мета.</span></li>
+          <li><span class="en">Consider <strong>anchoring</strong> clear of channels and waiting. <em>There is no prize for arriving.</em></span><span class="ua">Розгляньте <strong>постановку на якір</strong> поза каналами і чекайте. <em>Немає призу за прибуття.</em></span></li>
+        </ol>
+        <p class="en"><strong>For your first season or two: don't sail in fog, and don't sail when fog is forecast.</strong> That is the correct beginner answer and there's no shame in it.</p>
+        <p class="ua"><strong>У перший сезон чи два: не виходьте в туман і не виходьте, коли він у прогнозі.</strong> Це правильна відповідь для новачка, і в ній немає сорому.</p>
+      </section>
+    </div>
+
+    <!-- ============ HALIFAX NUMBERS ============ -->
+    <section class="panel">
+      <p class="panel-label">Local knowledge · Місцеві знання</p>
+      <h2>
+        <span class="en">Halifax numbers worth memorising</span><span class="ua h2-ua">Числа Галіфаксу, які варто запам'ятати</span>
+      </h2>
+      <dl class="readout">
+        <div><dt>Season</dt><dd>May–Oct<small class="en">Launch in May, haul out late October. Aug–Sept are the best sailing months.</small><small class="ua">Спуск у травні, підйом у кінці жовтня. Серпень–вересень найкращі.</small></dd></div>
+        <div><dt>Water temp</dt><dd>12–18 °C<small class="en">At its warmest, July–August. 8–12 °C in June. Never safe unprotected.</small><small class="ua">У найтеплішу пору. У червні 8–12 °C. Ніколи не безпечна без захисту.</small></dd></div>
+        <div><dt>Tidal range</dt><dd>1.4–2 m<small class="en">Modest. But current is strong in the Narrows.</small><small class="ua">Помірна. Але течія сильна в Narrows.</small></dd></div>
+        <div><dt>Summer wind</dt><dd>SW<small class="en">Sea breeze building through the afternoon, strongest 1400–1800.</small><small class="ua">Морський бриз наростає до вечора, найсильніший 14:00–18:00.</small></dd></div>
+        <div><dt>Beginner range</dt><dd>5–12 kt<small class="en">Beaufort 2–4. Comfortable competence to 15 kt.</small><small class="ua">Бофорт 2–4. Комфортна компетентність до 15 вузлів.</small></dd></div>
+        <div><dt>Stay in port</dt><dd>20+ kt<small class="en">A Small Craft Warning (20–33 kt) means you don't go. No exceptions while learning.</small><small class="ua">Small Craft Warning (20–33 вузли) означає, що ви не йдете.</small></dd></div>
+        <div><dt>Distress</dt><dd>VHF 16<small class="en">Monitor it always. Reaches the Coast Guard and every vessel in range.</small><small class="ua">Слухайте завжди. Досягає Coast Guard і всіх суден у радіусі.</small></dd></div>
+        <div><dt>Harbour traffic</dt><dd>Ch 12 / 14<small class="en">Halifax vessel traffic — verify locally. Listening is your best collision avoidance.</small><small class="ua">Рух суден Галіфаксу — перевірте локально. Прослуховування — найкраще уникнення зіткнень.</small></dd></div>
+        <div><dt>Weather</dt><dd>21B / 83B<small class="en">Continuous Marine Broadcast. Forecast issued ~0300, 1000, 1530, 2000.</small><small class="ua">Безперервна морська передача. Прогноз ~03:00, 10:00, 15:30, 20:00.</small></dd></div>
+        <div><dt>Hurricane risk</dt><dd>Aug–Oct<small class="en">Usually weakened by the cold sea, but still destructive. You get 3–5 days' warning.</small><small class="ua">Зазвичай ослаблені холодним морем, але все ще руйнівні. Попередження 3–5 днів.</small></dd></div>
+        <div><dt>Fog days</dt><dd>100+/yr<small class="en">Worst June–July. Sea fog does not burn off.</small><small class="ua">Найгірше червень–липень. Морський туман не вигорає.</small></dd></div>
+        <div><dt>Variation</dt><dd>~17–18° W<small class="en">Nova Scotia magnetic variation. West is best — add, going true → compass.</small><small class="ua">Магнітне відхилення. West is best — додавай, від істинного до компасного.</small></dd></div>
+      </dl>
+
+      <h3><span class="en">Where to sail, in order</span><span class="ua">Куди йти, за порядком</span></h3>
+      <p class="en">Each step adds exactly one new element. That's how you build competence without frightening yourself or your crew.</p>
+      <p class="ua">Кожен крок додає рівно один новий елемент. Саме так будується компетентність.</p>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>№</th><th>Trip</th><th>Time</th><th>New element</th></tr></thead>
+          <tbody>
+            <tr><td class="num">01</td><td>Northwest Arm circuits</td><td class="mono">2 h</td><td><span class="en">Everything basic, in shelter. Gusty and shifty — a good teacher.</span><span class="ua">Усі основи в укритті. Поривчастий зсувний вітер — добрий учитель.</span></td></tr>
+            <tr><td class="num">02</td><td>Arm → outer harbour → back</td><td class="mono">3 h</td><td><span class="en">Commercial traffic awareness</span><span class="ua">Усвідомлення комерційного руху</span></td></tr>
+            <tr><td class="num">03</td><td>Bedford Basin, via the Narrows</td><td class="mono">4 h</td><td><span class="en">Tidal current, constricted channel</span><span class="ua">Припливна течія, звужений канал</span></td></tr>
+            <tr><td class="num">04</td><td>McNabs Island and back</td><td class="mono">4–5 h</td><td><span class="en">Crossing a shipping channel; anchoring</span><span class="ua">Перетин суднового ходу; постановка на якір</span></td></tr>
+            <tr><td class="num">05</td><td>Out to Chebucto Head</td><td class="mono">5–6 h</td><td><span class="en"><strong>First ocean swell</strong>, headland effects</span><span class="ua"><strong>Перша океанська хвиля</strong>, вплив мису</span></td></tr>
+            <tr><td class="num">06</td><td>Halifax → St. Margaret's Bay</td><td class="mono">full day</td><td><span class="en">First real coastal passage</span><span class="ua">Перший справжній прибережний перехід</span></td></tr>
+            <tr><td class="num">07</td><td>Halifax → Chester</td><td class="mono">2 days</td><td><span class="en"><strong>Sleeping aboard</strong>, night anchoring</span><span class="ua"><strong>Ночівля на борту</strong>, нічний якір</span></td></tr>
+            <tr><td class="num">08</td><td>Mahone Bay → Lunenburg</td><td class="mono">4–7 days</td><td><span class="en"><strong>A real cruise.</strong> World-class ground, on your doorstep.</span><span class="ua"><strong>Справжній круїз.</strong> Район світового класу, під дверима.</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ PRE-DEPARTURE ============ -->
+    <section class="panel">
+      <p class="panel-label">Every trip · Кожен вихід</p>
+      <h2><span class="en">Before you leave the dock</span><span class="ua h2-ua">Перед відходом від причалу</span></h2>
+      <div class="grid two">
+        <div>
+          <h3><span class="en">Shore &amp; boat</span><span class="ua">Берег і судно</span></h3>
+          <ul class="check">
+            <li><span class="en">Marine forecast — wind, gusts, <strong>visibility</strong>, warnings</span><span class="ua">Морський прогноз — вітер, пориви, <strong>видимість</strong>, попередження</span></li>
+            <li><span class="en">Tide checked for <strong>return</strong> time, not just departure</span><span class="ua">Приплив перевірено на час <strong>повернення</strong></span></li>
+            <li><span class="en"><strong>Sail plan filed</strong> — someone ashore knows where, who, when back, and what to do if you're not</span><span class="ua"><strong>План виходу залишено</strong> — хтось на берегі знає куди, хто, коли назад, і що робити, якщо ні</span></li>
+            <li><span class="en">Rigging inspected — shrouds, stays, turnbuckles, pins</span><span class="ua">Такелаж оглянуто — ванти, штаги, талрепи, шплінти</span></li>
+            <li><span class="en">Bilge dry · seacocks correct</span><span class="ua">Трюм сухий · кінгстони в правильному положенні</span></li>
+            <li><span class="en">Sheets led outside the shrouds, <strong>stopper knots in the ends</strong></span><span class="ua">Шкоти проведені зовні вант, <strong>стопорні вузли на кінцях</strong></span></li>
+            <li><span class="en">Engine: <strong>WOBBLE</strong> — Water, Oil, Belts, Bolts, Leaks, Electrics</span><span class="ua">Двигун: <strong>WOBBLE</strong> — вода, масло, ремені, болти, протікання, електрика</span></li>
+            <li><span class="en">Raw-water seacock <strong>OPEN</strong></span><span class="ua">Кінгстон забортної води <strong>ВІДКРИТИЙ</strong></span></li>
+            <li><span class="en"><strong>Nothing in the water astern</strong> — no lines, no dinghy painter</span><span class="ua"><strong>Нічого у воді за кормою</strong> — жодних кінців, фаліня шлюпки</span></li>
+            <li><span class="en">After starting: <strong>cooling water from the exhaust.</strong> None? Stop the engine immediately.</span><span class="ua">Після запуску: <strong>вода з вихлопу.</strong> Немає? Негайно зупиніть двигун.</span></li>
+          </ul>
+        </div>
+        <div>
+          <h3><span class="en">Crew brief — two minutes, point at each thing</span><span class="ua">Інструктаж — дві хвилини, показуйте на кожне</span></h3>
+          <ul class="check">
+            <li><span class="en">"Here are the PFDs, here's how to wear one."</span><span class="ua">«Ось жилети, ось як надіти.»</span></li>
+            <li><span class="en">"Fire extinguisher. Flares. First aid kit."</span><span class="ua">«Вогнегасник. Фальшфейєри. Аптечка.»</span></li>
+            <li><span class="en">"VHF. Channel 16. High power. Here's the MAYDAY card — read it now."</span><span class="ua">«VHF. Канал 16. Висока потужність. Ось картка MAYDAY — прочитайте зараз.»</span></li>
+            <li><span class="en">"Bilge pump, and its handle."</span><span class="ua">«Трюмний насос і його ручка.»</span></li>
+            <li><span class="en">"Engine start, and the kill switch."</span><span class="ua">«Запуск двигуна і вимикач.»</span></li>
+            <li><span class="en">"Watch the boom. When I say gybe-ho, get your head down."</span><span class="ua">«Слідкуйте за ґіком. Коли скажу gybe-ho — голову вниз.»</span></li>
+            <li><span class="en">"One hand for the boat. Move on the high side."</span><span class="ua">«Одна рука для судна. Ходіть навітряним бортом.»</span></li>
+            <li><span class="en">"If someone goes over: shout, throw something buoyant, one of you points and does nothing else."</span><span class="ua">«Якщо хтось за бортом: кричіть, киньте плавуче, один показує і не робить більше нічого.»</span></li>
+            <li><span class="en"><strong>"If I go over, here is exactly what you do…"</strong> ← the point almost nobody makes, and the one that matters most</span><span class="ua"><strong>«Якщо я впаду за борт, ось що ви робите…»</strong> ← пункт, який майже ніхто не проговорює, і найважливіший</span></li>
+            <li><span class="en">"We're going here, back around this time, someone ashore knows."</span><span class="ua">«Ідемо туди, назад приблизно тоді, на берегі знають.»</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="warn">
+        <p class="en"><strong>The hardest skill in sailing is deciding not to go.</strong> Don't go if there's a Small Craft Warning, if fog is present or forecast, if a front will pass during your trip, if anyone aboard is unwell or has been drinking, if required safety gear is missing or expired — or if you simply have a bad feeling about it. Experienced sailors respect that feeling; it's usually your brain integrating something you haven't consciously noticed.</p>
+        <p class="en" style="margin-top:.6rem"><em>The sea will still be there tomorrow. The decision to go is always optional; the decision to come back is not.</em></p>
+        <p class="ua"><strong>Найважчий навик у вітрильному спорті — вирішити не йти.</strong> Не йдіть, якщо діє Small Craft Warning, якщо є або прогнозується туман, якщо під час виходу пройде фронт, якщо хтось на борту хворий або випив, якщо відсутнє чи прострочене обов'язкове спорядження — або якщо у вас просто погане передчуття. Досвідчені яхтсмени поважають це передчуття.</p>
+        <p class="ua" style="margin-top:.6rem"><em>Море буде і завтра. Рішення вийти завжди опційне; рішення повернутися — ні.</em></p>
+      </div>
+    </section>
+
+    <!-- ============ FULL COURSE ============ -->
+    <section class="panel accent">
+      <p class="panel-label">The full course · Повний курс</p>
+      <h2><span class="en">This card is the summary</span><span class="ua h2-ua">Ця картка — лише конспект</span></h2>
+      <p class="en">The complete course lives in the repository as eighteen bilingual modules, plus a glossary of around 600 terms, printable checklists, a logbook template, and a seven-level drill progression. Read it in this order:</p>
+      <p class="ua">Повний курс лежить у репозиторії як вісімнадцять двомовних модулів, плюс глосарій приблизно на 600 термінів, чек-листи для друку, шаблон суднового журналу і прогресія вправ на сім рівнів.</p>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Stage</th><th>Modules</th><th>Goal</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">0–1</td><td>Orientation · Safety &amp; cold water</td><td><span class="en">Understand the licensing landscape and how not to die</span><span class="ua">Зрозуміти систему ліцензій і як не загинути</span></td></tr>
+            <tr><td class="mono">2</td><td>Physics · Anatomy · Trim · Manoeuvres · Knots</td><td><span class="en">Understand the boat and make it go where you want</span><span class="ua">Зрозуміти судно і змусити його йти куди треба</span></td></tr>
+            <tr><td class="mono">3</td><td>COLREGs · Buoys · Weather · Charts · VHF · <strong>PCOC</strong></td><td><span class="en">Shore knowledge, and the legal card</span><span class="ua">Берегові знання і юридична картка</span></td></tr>
+            <tr><td class="mono">4</td><td>Engine · Emergencies · <strong>Basic Cruising</strong></td><td><span class="en">Become a skipper</span><span class="ua">Стати шкіпером</span></td></tr>
+            <tr><td class="mono">5</td><td>Intermediate · Cruising grounds · Ownership</td><td><span class="en">Charter anywhere; cruise the South Shore</span><span class="ua">Чартер будь-де; круїз по Південному узбережжю</span></td></tr>
+            <tr><td class="mono">19</td><td><strong>Buying a boat in Nova Scotia</strong></td><td><span class="en">Models suited to this coast, real prices, the survey, and the true cost of ownership</span><span class="ua">Моделі для цього берега, реальні ціни, сюрвей і справжня вартість володіння</span></td></tr>
+            <tr><td class="mono">20</td><td><strong>Sailing with your family</strong></td><td><span class="en">Child PFDs and cold water, rules aboard, CANSail, trip design, co-skippering</span><span class="ua">Дитячі жилети й холодна вода, правила на борту, CANSail, планування походів, співшкіперство</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="en"><strong>And the last piece of advice, which is the most important one:</strong> go sailing. Today, if you can. Everything written down is scaffolding around a physical skill that exists only on the water. The strongest predictor of becoming a good sailor is not intelligence, money, or study — it is hours on the water.</p>
+      <p class="ua"><strong>І остання порада, найважливіша:</strong> ідіть під вітрилами. Сьогодні, якщо можете. Усе написане — лише каркас навколо фізичного навику, який існує лише на воді. Найсильніший показник того, чи станете ви добрим яхтсменом, — це не розум, не гроші і не навчання. Це години на воді.</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <p class="en"><strong>Verify before you rely on any of it.</strong> This card is a study aid, not an authority. Required safety equipment, VHF channel assignments, chart numbers, prices, and course schedules all change — check Transport Canada's <em>Safe Boating Guide</em> (TP 511) for equipment and law, Sail Canada for what each certification requires, the Canadian Hydrographic Service for charts and tides, and the clubs directly for programs and costs. Nothing here is legal advice, and no description of an anchorage or entrance in this document is adequate for navigation.</p>
+      <p class="ua"><strong>Перевіряйте, перш ніж покладатися.</strong> Ця картка — навчальний посібник, а не джерело права. Обов'язкове спорядження безпеки, призначення каналів VHF, номери карт, ціни й розписи курсів змінюються — перевіряйте <em>Safe Boating Guide</em> (TP 511) від Transport Canada щодо спорядження й закону, Sail Canada щодо вимог сертифікацій, Canadian Hydrographic Service щодо карт і припливів, і клуби напряму щодо програм і вартості.</p>
+      <p style="font-family:var(--mono); font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint)">Fair winds · Попутного вітру</p>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    var page = document.querySelector('.page');
+    var buttons = document.querySelectorAll('.switch button');
+    buttons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        page.setAttribute('data-lang', btn.dataset.set);
+        buttons.forEach(function (b) {
+          b.setAttribute('aria-pressed', String(b === btn));
+        });
+      });
+    });
+  })();
+</script>
+</body>
+</html>

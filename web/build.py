@@ -11,13 +11,50 @@ Usage:  python3 web/build.py
 Output: web/course.html
 """
 
+import argparse
 import json
 import pathlib
 import re
+import shutil
 import html as htmllib
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 OUT = ROOT / "web" / "course.html"
+DOCS = ROOT / "docs"
+
+# GitHub Pages serves the file verbatim, so a standalone page needs its own
+# document shell. The artifact host supplies one, so that build stays a fragment.
+PAGE_SHELL = """<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="{desc}">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#9973;</text></svg>">
+{extra}</head>
+<body>
+{body}</body>
+</html>
+"""
+
+SITE_NAV = """<nav class="site-nav">
+  <a href="./index.html" {c}>Interactive course</a>
+  <a href="./deck.html" {d}>Deck card</a>
+  <a href="https://github.com/AndriiB-CA/SailBoat_Course" target="_blank" rel="noopener">Source</a>
+</nav>
+<style>
+  .site-nav{{display:flex;gap:.15rem;flex-wrap:wrap;align-items:center;
+    background:var(--surface,#FAFCFD);border-bottom:1px solid var(--rule,#C4D3DC);
+    padding:.4rem clamp(.7rem,3vw,1.4rem);
+    font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.68rem;
+    letter-spacing:.06em;text-transform:uppercase;position:relative;z-index:60}}
+  .site-nav a{{color:var(--ink-soft,#556975);text-decoration:none;padding:.3rem .6rem;border-radius:2px}}
+  .site-nav a:hover{{background:var(--shoal,#DFEAF0);color:var(--ink,#0F1B24)}}
+  .site-nav a[aria-current="page"]{{color:var(--magenta,#AC1A6E);font-weight:700}}
+  .site-nav a:focus-visible{{outline:2px solid var(--magenta,#AC1A6E);outline-offset:1px}}
+</style>
+"""
 
 # ---------------------------------------------------------------- structure
 
@@ -426,6 +463,11 @@ def main():
     glossary = extract_glossary()
     quiz = extract_quiz()
 
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--pages", action="store_true",
+                    help="also write a standalone site into docs/ for GitHub Pages")
+    args = ap.parse_args()
+
     tpl = (ROOT / "web" / "app-template.html").read_text(encoding="utf-8")
     out = (tpl
            .replace("/*__DOCS__*/'{}'",     json.dumps(docs, ensure_ascii=False))
@@ -434,11 +476,47 @@ def main():
            .replace("/*__QUIZ__*/'[]'",     json.dumps(quiz, ensure_ascii=False))
            .replace("/*__PROGRESS__*/'[]'", json.dumps(PROGRESS_IDS)))
 
-    OUT.write_text(out, encoding="utf-8")
-    print(f"wrote {OUT.relative_to(ROOT)}  {len(out.encode()):,} bytes")
+    OUT.write_text(out.replace("<!--SITE_NAV-->", ""), encoding="utf-8")
+    print(f"wrote {OUT.relative_to(ROOT)}  {len(out.encode()):,} bytes  (artifact fragment)")
     print(f"  documents : {len(docs)}")
     print(f"  glossary  : {len(glossary)} terms")
     print(f"  quiz      : {len(quiz)} questions")
+
+    if args.pages:
+        build_pages(out)
+
+
+def build_pages(course_fragment):
+    """Write a standalone two-page site into docs/ for GitHub Pages."""
+    DOCS.mkdir(exist_ok=True)
+    (DOCS / ".nojekyll").write_text("", encoding="utf-8")
+
+    def shell(fragment, desc, extra=""):
+        return PAGE_SHELL.format(body=fragment, desc=htmllib.escape(desc, quote=True), extra=extra)
+
+    # the course app
+    nav = SITE_NAV.format(c='aria-current="page"', d="")
+    body = course_fragment.replace("<!--SITE_NAV-->", nav)
+    (DOCS / "index.html").write_text(
+        shell(body, "A complete bilingual English/Ukrainian sailing course for beginners in "
+                    "Halifax, Nova Scotia — from the PCOC licence to Sail Canada skipper "
+                    "certification, with interactive tools."),
+        encoding="utf-8")
+
+    # the quick-reference deck card
+    deck = (ROOT / "web" / "deck-card.html").read_text(encoding="utf-8")
+    nav = SITE_NAV.format(c="", d='aria-current="page"')
+    deck = nav + deck if "<!--SITE_NAV-->" not in deck else deck.replace("<!--SITE_NAV-->", nav)
+    (DOCS / "deck.html").write_text(
+        shell(deck, "Bilingual quick-reference card for sailing in Halifax, Nova Scotia — "
+                    "cold-water survival, points of sail, right of way, buoyage and the "
+                    "MAYDAY format."),
+        encoding="utf-8")
+
+    for f in ("index.html", "deck.html"):
+        n = (DOCS / f).stat().st_size
+        print(f"wrote docs/{f}  {n:,} bytes  (standalone page)")
+    print("wrote docs/.nojekyll")
 
 
 if __name__ == "__main__":

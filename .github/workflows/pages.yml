@@ -1,0 +1,68 @@
+name: Deploy course site to GitHub Pages
+
+# Publishes docs/ to GitHub Pages. The configure-pages step turns Pages on if
+# it is not already enabled, so no manual repository setting is needed for a
+# first deploy — see the note in web/README.md if that step is ever refused.
+
+on:
+  push:
+    branches:
+      - claude/sailboat-course-halifax-jthax9
+      - main
+      - master
+    paths:
+      - "docs/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never run two deploys at once, and let a running deploy finish rather than
+# cancelling it partway.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Check whether the committed site matches the markdown
+        # Advisory only: a mismatch still deploys, it just tells you the
+        # committed site is behind the source. Rebuild with
+        # `python3 web/build.py --pages` and commit to clear it.
+        continue-on-error: true
+        run: |
+          python3 web/build.py --pages
+          if git diff --quiet -- docs/; then
+            echo "docs/ is up to date with the markdown source."
+          else
+            echo "::warning::docs/ looks stale — the committed site does not match the markdown. Run 'python3 web/build.py --pages' and commit."
+            git diff --stat -- docs/
+          fi
+          # deploy whatever is committed, not the rebuild
+          git checkout -- docs/
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          # Turn Pages on if the repository does not have it enabled yet.
+          enablement: true
+
+      - name: Upload the site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
