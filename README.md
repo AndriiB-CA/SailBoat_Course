@@ -67,9 +67,31 @@ Full detail, hour estimates, and a dated Halifax season plan: **[COURSE_MAP.md](
 
 ---
 
-## Phone-friendly web version / Веб-версія для телефону
+## Interactive web app / Інтерактивний застосунок
 
-**EN** — A condensed **[Deck Card](web/deck-card.html)** holds the things you actually need at the dock or in a hurry: the 1‑10‑1 cold-water principle, points of sail, right of way, buoyage, the commands, the MAYDAY format, the pre-departure checklist, and the Halifax numbers. It has an **EN / UA / both** language toggle so you can collapse it to one language on a small screen. Published at: <https://claude.ai/code/artifact/b0591ec2-e5b0-4121-badb-7b2df0bf0abf>
+**EN** — The whole course as a **[single interactive page](web/course.html)** — every module and appendix with sidebar navigation, full-text search, an **EN / UA / both** language toggle, per-module progress tracking, and every checklist in the course made tickable and saved in your browser. Plus five tools built from the course content:
+
+| Tool | What it does |
+|---|---|
+| **Points of sail explorer** | Drag the boat around the wind and watch the sail ease out, the tack flip, and the trim angle change. The relationship you need in your hands, not just on a page. |
+| **PCOC practice exam** | The 25 practice questions, shuffled and scored against the typical 75% pass mark. |
+| **Glossary flashcards** | 394 EN ⇄ UA term pairs, filterable by topic, drillable in either direction. |
+| **Boat cost calculator** | Enter a price and length; get the annual running cost and the realistic all-in first year — the number most buyers never work out. |
+| **Logbook** | Log hours, track hours as skipper separately, and export the whole thing as Markdown. |
+
+Published at: <https://claude.ai/code/artifact/bcbdd612-704d-4ddf-83a1-70cf8c2e609c>
+
+Rebuild it after editing any module with `python3 web/build.py`.
+
+**UA** — Увесь курс як **[одна інтерактивна сторінка](web/course.html)** — усі модулі й додатки з бічною навігацією, повнотекстовим пошуком, перемикачем мови **EN / UA / обидві**, відстеженням прогресу по модулях і всіма чек-листами курсу, які можна відмічати (зберігаються у браузері). Плюс п'ять інструментів: **дослідник курсів відносно вітру**, **пробний екзамен PCOC**, **картки глосарія** (394 пари термінів), **калькулятор вартості судна** і **судновий журнал** з експортом.
+
+Перезбирайте після редагування модулів: `python3 web/build.py`.
+
+---
+
+## Phone-friendly quick reference / Швидкий довідник для телефону
+
+**EN** — Smaller and faster to load than the full app, for when you are at the dock or in a hurry: a condensed **[Deck Card](web/deck-card.html)** holding the things you actually need at the dock or in a hurry: the 1‑10‑1 cold-water principle, points of sail, right of way, buoyage, the commands, the MAYDAY format, the pre-departure checklist, and the Halifax numbers. It has an **EN / UA / both** language toggle so you can collapse it to one language on a small screen. Published at: <https://claude.ai/code/artifact/b0591ec2-e5b0-4121-badb-7b2df0bf0abf>
 
 **UA** — Скорочена **[Палубна картка](web/deck-card.html)** містить те, що справді потрібно на причалі або в спішці: принцип 1‑10‑1, курси відносно вітру, правила розходження, систему буїв, команди, формат MAYDAY, чек-лист перед виходом і числа Галіфаксу. Має перемикач мови **EN / UA / обидві**, щоб на малому екрані залишити одну.
 
