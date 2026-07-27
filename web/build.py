@@ -31,6 +31,7 @@ PAGE_SHELL = """<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="{desc}">
 <meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#9973;</text></svg>">
 {extra}</head>
 <body>
@@ -491,6 +492,15 @@ def build_pages(course_fragment):
     DOCS.mkdir(exist_ok=True)
     (DOCS / ".nojekyll").write_text("", encoding="utf-8")
 
+    # Ask crawlers to stay out. This is a request that well-behaved crawlers
+    # honour, not access control — the site remains readable by anyone with
+    # the URL. Paired with a noindex meta tag in every page.
+    (DOCS / "robots.txt").write_text(
+        "# This is a personal sailing course, not a public publication.\n"
+        "# Please do not index it.\n"
+        "User-agent: *\n"
+        "Disallow: /\n", encoding="utf-8")
+
     def shell(fragment, desc, extra=""):
         return PAGE_SHELL.format(body=fragment, desc=htmllib.escape(desc, quote=True), extra=extra)
 
@@ -517,6 +527,7 @@ def build_pages(course_fragment):
         n = (DOCS / f).stat().st_size
         print(f"wrote docs/{f}  {n:,} bytes  (standalone page)")
     print("wrote docs/.nojekyll")
+    print("wrote docs/robots.txt  (noindex requested)")
 
 
 if __name__ == "__main__":

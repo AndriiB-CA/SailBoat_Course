@@ -77,6 +77,9 @@ Two pages:
 - **[/](https://andriib-ca.github.io/SailBoat_Course/)** — the full interactive course
 - **[/deck.html](https://andriib-ca.github.io/SailBoat_Course/deck.html)** — the phone-sized quick-reference card
 
+The site asks search engines not to index it (`docs/robots.txt` plus a `noindex`
+meta tag) — a request that compliant crawlers honour, not access control.
+
 Build details and how to rebuild: [web/README.md](web/README.md).
 
 ---

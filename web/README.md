@@ -83,23 +83,24 @@ The site is served at:
 - **<https://andriib-ca.github.io/SailBoat_Course/>** — the interactive course
 - **<https://andriib-ca.github.io/SailBoat_Course/deck.html>** — the deck card
 
-### One thing to be aware of
+### Search engines are asked to stay away
 
-This repository is **public**, so the Pages site is publicly reachable and can
-be indexed by search engines. That matters because the course was written for
-you specifically — module 20 is built around your partner and daughter and
-refers to her age. If you would rather that not be searchable, either:
+The build writes `docs/robots.txt` (`Disallow: /`) and puts
+`<meta name="robots" content="noindex, nofollow">` in every page, so compliant
+crawlers should neither crawl nor index the site.
 
-- keep the site but add a `docs/robots.txt` containing
-  `User-agent: *` / `Disallow: /` (discourages indexing; does not hide the
-  site), or
-- generalise the wording in `modules/20-family-sailing.md` to "your child",
-  rebuild, and commit, or
-- make the repository private — note that GitHub Pages on a private repository
-  requires a paid plan.
+**This is a request, not access control.** Anyone with the URL can still read
+the site, and scrapers that ignore `robots.txt` will too. The repository is
+public as well, so the markdown remains readable — and indexable — on GitHub
+itself regardless of what the Pages site says.
 
-Цей репозиторій **публічний**, тож сайт доступний усім і може індексуватися
-пошуковими системами. Модуль 20 написаний про вашу родину і згадує вік дочки.
-Якщо цього не хочеться — додайте `docs/robots.txt`, узагальніть формулювання,
-або зробіть репозиторій приватним (Pages для приватних репозиторіїв вимагає
-платного плану).
+If you want the content genuinely private, the options are to make the
+repository private (GitHub Pages on a private repository needs a paid plan) or
+to generalise the personal details — module 20 refers to your daughter and her
+age, and rewording it to "your child" costs nothing pedagogically.
+
+Збірка створює `docs/robots.txt` (`Disallow: /`) і додає
+`<meta name="robots" content="noindex, nofollow">` до кожної сторінки, тож
+відповідні пошукові роботи не мають індексувати сайт. **Це прохання, а не
+захист доступу** — будь-хто з посиланням усе одно може прочитати сайт, а
+репозиторій публічний, тому markdown залишається доступним на GitHub.

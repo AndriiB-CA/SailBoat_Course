@@ -1,0 +1,4 @@
+# This is a personal sailing course, not a public publication.
+# Please do not index it.
+User-agent: *
+Disallow: /
