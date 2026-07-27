@@ -1,8 +1,15 @@
 name: Deploy course site to GitHub Pages
 
-# Publishes docs/ to GitHub Pages. The configure-pages step turns Pages on if
-# it is not already enabled, so no manual repository setting is needed for a
-# first deploy — see the note in web/README.md if that step is ever refused.
+# Publishes docs/ to GitHub Pages.
+#
+# ONE-TIME SETUP: Pages must be switched on by a repository admin before this
+# can succeed. The workflow token is not allowed to create a Pages site, so
+# self-enablement is not possible.
+#
+#   Settings -> Pages -> Build and deployment -> Source: GitHub Actions
+#
+# After that this workflow runs on every push to the default branch, and the
+# "Configure Pages" step below becomes a no-op.
 
 on:
   push:
@@ -53,10 +60,26 @@ jobs:
           git checkout -- docs/
 
       - name: Configure Pages
+        id: configure
         uses: actions/configure-pages@v5
         with:
-          # Turn Pages on if the repository does not have it enabled yet.
+          # Attempted, but the workflow token is normally refused; harmless
+          # once Pages has been enabled by hand.
           enablement: true
+
+      - name: Explain how to enable Pages
+        if: failure() && steps.configure.outcome == 'failure'
+        run: |
+          echo "::error title=GitHub Pages is not enabled::Enable it once by hand, then re-run this workflow."
+          echo ""
+          echo "  1. Open  Settings -> Pages"
+          echo "  2. Under 'Build and deployment', set Source: GitHub Actions"
+          echo "  3. Re-run this workflow from the Actions tab"
+          echo ""
+          echo "The workflow token cannot create a Pages site itself"
+          echo "('Resource not accessible by integration'), which is why this"
+          echo "step is required once per repository."
+
 
       - name: Upload the site
         uses: actions/upload-pages-artifact@v3
