@@ -69,6 +69,45 @@
 - **Where:** Northwest Arm.
 - **Character:** Community/municipal boating facility on the Arm — worth investigating for accessible small-boat and paddling options.
 
+### Youth & junior programs — for an 8-year-old / Дитячі програми
+
+**🇨🇦 EN** — Eight is exactly the entry age for CANSail, Sail Canada's dinghy program. See [Module 20 §20.5](../modules/20-family-sailing.md) for why this matters more than teaching her yourself.
+
+| Club | Program | Ages | Boats | Contact |
+|---|---|---|---|---|
+| **Dartmouth Yacht Club** | **CANSail 1–6**, plus a **"Wetfeet"** program for younger children | **CANSail 8–18**; Wetfeet **5–8** | **Optimist** and **Club 420** fleet | 697 Windmill Rd, Dartmouth · **(902) 468‑6050** · admin@dartmouthyachtclub.ca · dartmouthyachtclub.ca |
+| **AYC Sailing School** (Armdale Yacht Club) | **Junior Sailing**, CANSail curriculum, certified instructors | **5–18** | Dinghies, on the sheltered **Northwest Arm** | aycsailing.ca/junior-sailing-programs · **membership not required** to participate (members get a discount) |
+| **Royal Nova Scotia Yacht Squadron** | Youth sailing programs | — | Northwest Arm | rnsys.com/youthsailingprograms · **(902) 477‑5653** |
+
+**🇨🇦 EN — Timing:** youth registration typically opens in **late winter / early spring** and popular sessions fill. **Ask in January or February** for the following summer. Also ask specifically about the **cold-water and capsize-recovery component**, and whether wetsuits are required or provided — in Nova Scotia they matter.
+
+**🇺🇦 UA** — Вісім років — саме вік входу в CANSail, програму Sail Canada для дінгі. Чому це важливіше за ваше власне навчання дочки — див. [Модуль 20 §20.5](../modules/20-family-sailing.md).
+
+**🇺🇦 UA — Час:** реєстрація в дитячі програми зазвичай відкривається **в кінці зими / на початку весни**, і популярні сесії заповнюються. **Питайте в січні–лютому** на наступне літо. Також окремо питайте про **компонент холодної води й підняття після перевертання** і чи потрібні гідрокостюми.
+
+---
+
+### Buying a boat — where to look / Купівля судна — де шукати
+
+**🇨🇦 EN** — Full guidance, prices and a survey checklist in [Module 19](../modules/19-buying-a-boat.md).
+
+| Source | Good for |
+|---|---|
+| **Yacht club noticeboards and word of mouth** | **Start here.** Often the best boats at the best prices, with a *knowable* maintenance history. A real reason to join a club before you buy. |
+| **Walk the yards in late October** | Boats coming out of the water with "for sale" signs, and you can see the whole hull. The best time and place to shop. |
+| **Kijiji** — Halifax / Nova Scotia sailboat sections | Largest pool of private local listings; very mixed quality |
+| **BoatDealers.ca** | Canadian dealer and private listings |
+| **YachtWorld** (Nova Scotia filter) | Broker listings, higher-end, well documented |
+| **Ocean Yacht Sales** | Brokerage covering Canada's Atlantic provinces |
+| **Atlantic Yacht Sales** | Nova Scotia brokerage |
+| **Nova Scotia / Maritime sailing Facebook groups** | Where boats get mentioned before they're formally listed |
+
+**Services you'll need:** a **marine surveyor** (commonly **$15–30/ft**, so roughly **$450–900** for a 30-footer — engage your *own*, not the seller's), a **yard for the haul-out** (**$200–600** for a survey haul; AYC publishes yard labour around **$62/hour** with a half-hour minimum), and a **marine insurer** (sailboats commonly **0.75–1.5% of insured value** annually). Ask at the clubs for current recommendations — in a community this size, word of mouth beats online reviews.
+
+**🇺🇦 UA** — Повні рекомендації, ціни й чек-лист сюрвею — у [Модулі 19](../modules/19-buying-a-boat.md). **Починайте з дошок об'яв у клубах і сарафанного радіо**, і **пройдіться майданчиками в кінці жовтня**. Далі: Kijiji, BoatDealers.ca, YachtWorld з фільтром НШ, Ocean Yacht Sales, Atlantic Yacht Sales, групи у Facebook. **Потрібні послуги:** морський сюрвейєр (**$15–30/фут**, ~**$450–900** за 30-футове; беріть *свого*), майданчик для підйому (**$200–600**), морський страховик (**0,75–1,5% від застрахованої вартості** на рік).
+
+---
+
 ### Beyond Halifax
 - **St. Margaret's Bay area** — sailing clubs in the Hubbards and St. Margaret's areas.
 - **Chester Yacht Club** — Mahone Bay, strong racing and cruising tradition.
@@ -177,9 +216,13 @@
 | Club crew / associate membership | $200–600/yr |
 | Full club membership | Varies widely — ask |
 | Personal gear (spread over time) | $400–900 |
+| **Child's PFD** (foam, crotch strap, head support) | **$50–120** |
+| **CANSail junior program**, per session | **$250–600** |
+| **Child's sailing gear** — boots, gloves, warm layers, waterproofs | **$200–450** |
 | Chart + tide tables | $30–80 |
 | **Realistic Year 1 total** | **$1,500–2,500** |
-| Boat ownership annual running cost | **~10%+ of boat value per year** |
+| Boat ownership annual running cost | **~10–20% of boat value per year** — full breakdown in [Module 19 §19.5](../modules/19-buying-a-boat.md) |
+| Realistic all-in first year on a $30,000 boat | **≈ $40,000–50,000** |
 
 ---
 

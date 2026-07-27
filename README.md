@@ -59,6 +59,7 @@ Do not skip the English. Your instructor in Halifax will teach in English, the e
 | **Stage 3 — Legal & shore knowledge** | [07](modules/07-rules-of-the-road.md) – [12](modules/12-pcoc-exam-prep.md) | COLREGs, buoys, weather, charts, VHF radio, **PCOC exam** | Home |
 | **Stage 4 — Practical seamanship** | [13](modules/13-engine-and-docking.md) – [15](modules/15-basic-cruising-practical.md) | Engine, docking, emergencies, MOB, **Basic Cruising** | On the water |
 | **Stage 5 — Cruising & mastery** | [16](modules/16-intermediate-cruising.md) – [18](modules/18-ownership-and-mastery.md) | Anchoring, overnight, night sailing, Halifax cruising grounds, boat ownership | On the water |
+| **Specialist tracks** | [19](modules/19-buying-a-boat.md) · [20](modules/20-family-sailing.md) | **Buying a boat in Nova Scotia** (models, real prices, survey, true cost of ownership) and **sailing with your family** (child PFDs, CANSail for kids, trip design, co-skippering) | Home + on the water |
 
 Full detail, hour estimates, and a dated Halifax season plan: **[COURSE_MAP.md](COURSE_MAP.md)**
 

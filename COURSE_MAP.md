@@ -64,10 +64,12 @@
 | 16 | [Intermediate Cruising: anchoring, overnight, provisioning](modules/16-intermediate-cruising.md) | 3 h | 40 h+ | **Intermediate cert** |
 | 17 | [Halifax & South Shore cruising grounds](modules/17-halifax-cruising-grounds.md) | 2 h | seasons | Passage planning |
 | 18 | [Owning a boat in Nova Scotia & the road to mastery](modules/18-ownership-and-mastery.md) | 2 h | years | Mastery |
+| **19** | [**Buying a boat in Nova Scotia — a practical guide**](modules/19-buying-a-boat.md) | 3 h | — | Ownership |
+| **20** | [**Sailing with your family**](modules/20-family-sailing.md) | 2.5 h | ongoing | Family safety |
 
-**Total shore study: ~45 hours. Minimum water time to be genuinely competent: 100+ hours.**
+**Total shore study: ~50 hours. Minimum water time to be genuinely competent: 100+ hours.**
 
-**Загалом теорії на берегі: ~45 годин. Мінімум часу на воді, щоб бути справді компетентним: 100+ годин.**
+**Загалом теорії на берегі: ~50 годин. Мінімум часу на воді, щоб бути справді компетентним: 100+ годин.**
 
 ---
 
