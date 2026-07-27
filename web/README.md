@@ -20,6 +20,7 @@ source of truth — never edit the generated HTML.**
 | `../docs/index.html` | **Generated.** The course app as a standalone page, for GitHub Pages. |
 | `../docs/deck.html` | **Generated.** The deck card as a standalone page, for GitHub Pages. |
 | `../docs/.nojekyll` | Tells GitHub Pages to serve the files as-is rather than running Jekyll. |
+| `../docs/robots.txt` | **Generated.** Asks crawlers not to index the site. |
 
 ---
 
@@ -32,8 +33,12 @@ map:
 python3 web/build.py --pages
 ```
 
-That regenerates all three HTML outputs. Then commit — pushing to the default
-branch deploys the site automatically.
+That regenerates all three HTML outputs plus `robots.txt`. Then commit —
+pushing to the default branch deploys the site automatically.
+
+**`README.md` and `COURSE_MAP.md` are build inputs too**, so editing either of
+those also needs a rebuild. The workflow warns you in its log if the committed
+site has fallen behind the markdown.
 
 Без `--pages` збирається лише `course.html` (варіант для артефакту). З `--pages`
 додатково збирається окрема версія сайту в `docs/`.
@@ -69,14 +74,17 @@ No dependencies beyond the Python standard library.
 branch, and can be run by hand from the repository's **Actions** tab
 (*Deploy course site to GitHub Pages* → *Run workflow*).
 
-The workflow's `configure-pages` step has `enablement: true`, so it turns Pages
-on by itself on the first run. **If that step fails with a permissions error**,
-enable it once by hand and re-run the workflow:
+Pages is already enabled for this repository (**Settings → Pages → Build and
+deployment → Source: GitHub Actions**), so deploys are automatic and nothing
+further is needed.
 
-> Repository **Settings** → **Pages** → **Build and deployment** →
-> **Source: GitHub Actions**
-
-Also check **Settings → Actions → General** allows workflows to run.
+Worth knowing if you ever fork this or set it up elsewhere: **a workflow cannot
+switch Pages on for itself.** The `configure-pages` step requests it with
+`enablement: true`, but the workflow token is refused —
+`Resource not accessible by integration` — so an admin has to flip that setting
+once by hand first. The workflow prints those steps as an error annotation if it
+hits that state, and also check **Settings → Actions → General** allows
+workflows to run.
 
 The site is served at:
 
