@@ -1,29 +1,45 @@
 #!/usr/bin/env python3
 """
-Build the interactive course app from the markdown source.
+Build the interactive course site from the Markdown source.
 
-Reads every module and appendix, converts markdown to HTML, tags each block
+Reads every module and appendix, converts Markdown to HTML, tags each block
 with its language so the EN/UA toggle can collapse the page to one language,
-extracts the glossary and the PCOC quiz into structured data, and emits a
-single self-contained HTML file.
+extracts the glossary and the PCOC quiz into structured data, and writes
+self-contained HTML.
 
-Usage:  python3 web/build.py
-Output: web/course.html
+Requires Python 3 only — standard library, no third-party packages.
+
+Usage
+-----
+    python3 web/build.py            # web/course.html only
+    python3 web/build.py --pages    # also the standalone site in docs/
+
+Outputs
+-------
+    web/course.html     body fragment, for embedding in a host that supplies
+                        its own <head>
+    docs/index.html     the course app as a complete standalone page
+    docs/deck.html      the quick-reference card as a standalone page
+    docs/robots.txt     asks crawlers not to index
+    docs/.nojekyll      tells GitHub Pages not to run Jekyll
+
+See AGENTS.md for content conventions and how to verify a change.
 """
 
 import argparse
 import json
 import pathlib
 import re
-import shutil
 import html as htmllib
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 OUT = ROOT / "web" / "course.html"
 DOCS = ROOT / "docs"
 
-# GitHub Pages serves the file verbatim, so a standalone page needs its own
-# document shell. The artifact host supplies one, so that build stays a fragment.
+# A standalone page needs its own document shell, because a plain static host
+# such as GitHub Pages serves the file verbatim. The web/course.html build
+# stays a bare fragment instead, for embedding in a host that injects its own
+# <head>.
 PAGE_SHELL = """<!doctype html>
 <html lang="en">
 <head>
@@ -464,9 +480,12 @@ def main():
     glossary = extract_glossary()
     quiz = extract_quiz()
 
-    ap = argparse.ArgumentParser(description=__doc__)
+    ap = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--pages", action="store_true",
-                    help="also write a standalone site into docs/ for GitHub Pages")
+                    help="also write the standalone site into docs/ (for GitHub "
+                         "Pages or any static host)")
     args = ap.parse_args()
 
     tpl = (ROOT / "web" / "app-template.html").read_text(encoding="utf-8")
@@ -478,7 +497,7 @@ def main():
            .replace("/*__PROGRESS__*/'[]'", json.dumps(PROGRESS_IDS)))
 
     OUT.write_text(out.replace("<!--SITE_NAV-->", ""), encoding="utf-8")
-    print(f"wrote {OUT.relative_to(ROOT)}  {len(out.encode()):,} bytes  (artifact fragment)")
+    print(f"wrote {OUT.relative_to(ROOT)}  {len(out.encode()):,} bytes  (embeddable fragment)")
     print(f"  documents : {len(docs)}")
     print(f"  glossary  : {len(glossary)} terms")
     print(f"  quiz      : {len(quiz)} questions")

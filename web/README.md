@@ -16,7 +16,7 @@ source of truth — never edit the generated HTML.**
 | `build.py` | The build script. Renders the markdown into the app. |
 | `app-template.html` | The app shell: CSS, markup, and all the interactive tools. Edit this to change the app. |
 | `deck-card.html` | The hand-written quick-reference card. Not generated — edit directly. |
-| `course.html` | **Generated.** The course app as a fragment, for publishing as a Claude Artifact (the host supplies the `<head>`). |
+| `course.html` | **Generated.** The course app as a bare `<body>` fragment, for embedding in a host that supplies its own `<head>`. Not needed for the website. |
 | `../docs/index.html` | **Generated.** The course app as a standalone page, for GitHub Pages. |
 | `../docs/deck.html` | **Generated.** The deck card as a standalone page, for GitHub Pages. |
 | `../docs/.nojekyll` | Tells GitHub Pages to serve the files as-is rather than running Jekyll. |
@@ -33,14 +33,14 @@ map:
 python3 web/build.py --pages
 ```
 
-That regenerates all three HTML outputs plus `robots.txt`. Then commit —
+That regenerates all three HTML outputs plus `robots.txt` and `.nojekyll`. Then commit —
 pushing to the default branch deploys the site automatically.
 
 **`README.md` and `COURSE_MAP.md` are build inputs too**, so editing either of
 those also needs a rebuild. The workflow warns you in its log if the committed
 site has fallen behind the markdown.
 
-Без `--pages` збирається лише `course.html` (варіант для артефакту). З `--pages`
+Без `--pages` збирається лише `course.html` (фрагмент для вставки). З `--pages`
 додатково збирається окрема версія сайту в `docs/`.
 
 No dependencies beyond the Python standard library.

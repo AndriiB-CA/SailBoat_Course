@@ -318,6 +318,11 @@
   .log-form textarea{grid-column:1/-1;min-height:4.5rem;resize:vertical}
   .log-form input:focus-visible,.log-form textarea:focus-visible{outline:2px solid var(--magenta);outline-offset:1px}
   .empty{color:var(--ink-faint);font-style:italic;font-size:.9rem}
+  #lgFallback:not(:empty){margin-top:1rem;padding-top:1rem;border-top:1px solid var(--rule-soft)}
+  #lgDump{width:100%;font-family:var(--mono);font-size:.78rem;line-height:1.5;
+    background:var(--water);color:var(--ink);border:1px solid var(--rule);
+    border-radius:2px;padding:.6rem;resize:vertical}
+  #lgDump:focus-visible{outline:2px solid var(--magenta);outline-offset:1px}
 
   .warn-box{background:var(--magenta-bg);border:1px solid var(--magenta);border-radius:2px;
             padding:.85rem 1rem;font-size:.88rem;margin:0 0 1.2rem;max-width:var(--measure)}
@@ -436,6 +441,42 @@
   }
 
   const money = n => "$" + Math.round(n).toLocaleString("en-CA");
+
+  // Offer a generated file to the browser. Returns false if the environment
+  // refuses (blocked downloads, no Blob/URL support) so the caller can fall
+  // back to something the reader can still act on.
+  function saveTextFile(filename, text, mime) {
+    try {
+      const blob = new Blob([text], { type: mime || "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      a.rel = "noopener";
+      a.style.display = "none";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 30000);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // Last resort when a download cannot be started: put the text on screen,
+  // selected, so it can be copied.
+  function showCopyFallback(text) {
+    const host = document.getElementById("lgFallback");
+    if (!host) return;
+    host.innerHTML =
+      '<p class="card-label">Copy your logbook · Скопіюйте журнал</p>' +
+      '<textarea id="lgDump" rows="12" readonly aria-label="Logbook as Markdown"></textarea>';
+    const ta = document.getElementById("lgDump");
+    ta.value = text;
+    ta.focus();
+    ta.select();
+  }
 
   // Bilingual heading + intro for a tool view. In "both" mode the Ukrainian
   // sits under the English as a subtitle / separate paragraph rather than being
@@ -1089,7 +1130,8 @@
           '<textarea id="lgNotes" placeholder="What went well, what went wrong and why, what I&#39;ll do differently…" aria-label="Notes"></textarea>' +
         "</div>" +
         '<div class="btn-row"><button class="btn primary" id="lgAdd">Add entry</button>' +
-        '<button class="btn" id="lgExport">Export as Markdown</button></div>' +
+        '<button class="btn" id="lgExport">Download as Markdown</button></div>' +
+        '<div id="lgFallback"></div>' +
       "</div>" +
       '<div class="card"><p class="card-label">Totals · Підсумки</p><div id="lgTotals"></div></div>' +
       '<div class="card"><p class="card-label">Entries · Записи</p><div id="lgList"></div></div>';
@@ -1163,18 +1205,14 @@
             "\n- Role: " + (e.skip ? "Skipper" : "Crew") + "\n- Wind: " + (e.wind || "—") + "\n\n";
       if (e.notes) md += e.notes + "\n\n";
     });
-    if (!window.claude || !window.claude.downloads) {
-      toast("Saving isn't available in this view");
-      return;
+    if (saveTextFile("sailing-logbook.md", md, "text/markdown;charset=utf-8")) {
+      toast("Logbook downloaded");
+    } else {
+      // Some embedding contexts block downloads a page starts itself. Fall
+      // back to showing the text so it can always be copied out by hand.
+      showCopyFallback(md);
+      toast("Download blocked — copy the text instead");
     }
-    window.claude.downloads.save({ filename: "sailing-logbook.md", data: md })
-      .then(() => toast("Logbook saved"))
-      .catch(err => {
-        const code = err && err.code;
-        if (code === "declined")          toast("Save cancelled");
-        else if (code === "rate_limited") toast("Try again in a moment");
-        else                              toast("Couldn't save the file");
-      });
   }
 
   /* ---------------- tool router ---------------- */
