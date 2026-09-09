@@ -1,0 +1,14 @@
+# Python bytecode from running the build script
+__pycache__/
+*.py[cod]
+
+# Editor and OS noise
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# Local scratch — the generated site in docs/ IS tracked on purpose,
+# because GitHub Pages deploys the committed files.
