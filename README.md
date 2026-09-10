@@ -59,10 +59,61 @@ Do not skip the English. Your instructor in Halifax will teach in English, the e
 | **Stage 3 — Legal & shore knowledge** | [07](modules/07-rules-of-the-road.md) – [12](modules/12-pcoc-exam-prep.md) | COLREGs, buoys, weather, charts, VHF radio, **PCOC exam** | Home |
 | **Stage 4 — Practical seamanship** | [13](modules/13-engine-and-docking.md) – [15](modules/15-basic-cruising-practical.md) | Engine, docking, emergencies, MOB, **Basic Cruising** | On the water |
 | **Stage 5 — Cruising & mastery** | [16](modules/16-intermediate-cruising.md) – [18](modules/18-ownership-and-mastery.md) | Anchoring, overnight, night sailing, Halifax cruising grounds, boat ownership | On the water |
+| **Specialist tracks** | [19](modules/19-buying-a-boat.md) · [20](modules/20-family-sailing.md) | **Buying a boat in Nova Scotia** (models, real prices, survey, true cost of ownership) and **sailing with your family** (child PFDs, CANSail for kids, trip design, co-skippering) | Home + on the water |
 
 Full detail, hour estimates, and a dated Halifax season plan: **[COURSE_MAP.md](COURSE_MAP.md)**
 
 Повна деталізація, оцінка годин та датований план сезону в Галіфаксі: **[COURSE_MAP.md](COURSE_MAP.md)**
+
+---
+
+## The website / Веб-сайт
+
+**🌐 <https://andriib-ca.github.io/SailBoat_Course/>**
+
+**EN** — The whole course as a single interactive page: every module and
+appendix with sidebar navigation, full-text search, an **EN / UA / both**
+language toggle, per-module progress tracking, and every checklist in the
+course made tickable and saved in your browser. Plus five tools built from the
+course content:
+
+| Tool | What it does |
+|---|---|
+| **Points of sail explorer** | Drag the boat around the wind and watch the sail ease out, the tack flip, and the trim angle change. The relationship you need in your hands, not just on a page. |
+| **PCOC practice exam** | The 25 practice questions, shuffled and scored against the typical 75% pass mark. |
+| **Glossary flashcards** | ~394 EN ⇄ UA term pairs, filterable by topic, drillable in either direction. |
+| **Boat cost calculator** | Enter a price and length; get the annual running cost and the realistic all-in first year — the number most buyers never work out. |
+| **Logbook** | Log hours, track hours as skipper separately, and download the whole thing as Markdown. |
+
+There is also a **[deck card](https://andriib-ca.github.io/SailBoat_Course/deck.html)** —
+smaller and faster to load, for when you are at the dock or in a hurry: the
+1‑10‑1 cold-water principle, points of sail, right of way, buoyage, the
+commands, the MAYDAY format, the pre-departure checklist, and the Halifax
+numbers.
+
+The site is generated from this Markdown and needs no build tooling, no
+dependencies and no network access — it works offline from a phone. It asks
+search engines not to index it (`docs/robots.txt` plus a `noindex` meta tag),
+which is a request compliant crawlers honour rather than access control.
+
+**UA** — Увесь курс як одна інтерактивна сторінка: усі модулі й додатки з
+бічною навігацією, повнотекстовим пошуком, перемикачем мови
+**EN / UA / обидві**, відстеженням прогресу та чек-листами, які можна
+відмічати (зберігаються у браузері). Плюс п'ять інструментів: **дослідник
+курсів відносно вітру**, **пробний екзамен PCOC**, **картки глосарія**,
+**калькулятор вартості судна** і **судновий журнал** із завантаженням.
+
+### Rebuilding / Перезбірка
+
+```bash
+python3 web/build.py --pages
+```
+
+Requires Python 3 only. Commit the regenerated `docs/` together with your
+Markdown change; pushing to the default branch deploys the site.
+
+Contributor and agent guide: **[AGENTS.md](AGENTS.md)** · build details:
+**[web/README.md](web/README.md)**
 
 ---
 

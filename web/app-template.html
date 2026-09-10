@@ -1,0 +1,1258 @@
+<title>Sailing Halifax · Interactive Course</title>
+
+<style>
+  /* ==========================================================
+     Palette from Canadian Hydrographic Service chart convention:
+     white-blue deep-water ground, navy engraving ink, and the
+     cautionary magenta charts reserve for radio and warning
+     information as the single accent. Buoy red/green stay
+     strictly semantic.
+     ========================================================== */
+  :root {
+    --water:#EDF2F5; --surface:#FAFCFD; --shoal:#DFEAF0; --sink:#E4EBEF;
+    --ink:#0F1B24; --ink-soft:#556975; --ink-faint:#8598A4;
+    --rule:#C4D3DC; --rule-soft:#DCE6EC;
+    --magenta:#AC1A6E; --magenta-bg:#FBEAF3;
+    --buoy-red:#AF262B; --buoy-green:#1C6E45;
+    --shadow:0 1px 2px rgba(15,27,36,.06);
+    --display:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Charter,Georgia,serif;
+    --body:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+    --measure:68ch;
+    --rail:274px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --water:#0B151C; --surface:#121E26; --shoal:#1A2A34; --sink:#0E1922;
+      --ink:#E3EDF2; --ink-soft:#9AAEBA; --ink-faint:#6B808D;
+      --rule:#2A3D49; --rule-soft:#1E2E38;
+      --magenta:#F27CBE; --magenta-bg:#2B1526;
+      --buoy-red:#EE7A7E; --buoy-green:#5FBE8C;
+      --shadow:0 1px 2px rgba(0,0,0,.3);
+    }
+  }
+  :root[data-theme="dark"]{
+    --water:#0B151C; --surface:#121E26; --shoal:#1A2A34; --sink:#0E1922;
+    --ink:#E3EDF2; --ink-soft:#9AAEBA; --ink-faint:#6B808D;
+    --rule:#2A3D49; --rule-soft:#1E2E38;
+    --magenta:#F27CBE; --magenta-bg:#2B1526;
+    --buoy-red:#EE7A7E; --buoy-green:#5FBE8C;
+    --shadow:0 1px 2px rgba(0,0,0,.3);
+  }
+  :root[data-theme="light"]{
+    --water:#EDF2F5; --surface:#FAFCFD; --shoal:#DFEAF0; --sink:#E4EBEF;
+    --ink:#0F1B24; --ink-soft:#556975; --ink-faint:#8598A4;
+    --rule:#C4D3DC; --rule-soft:#DCE6EC;
+    --magenta:#AC1A6E; --magenta-bg:#FBEAF3;
+    --buoy-red:#AF262B; --buoy-green:#1C6E45;
+    --shadow:0 1px 2px rgba(15,27,36,.06);
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--water);color:var(--ink);font-family:var(--body);
+       font-size:16px;line-height:1.62;-webkit-text-size-adjust:100%}
+
+  /* ---------- language visibility ---------- */
+  .app[data-lang="en"] [data-lang="ua"]{display:none}
+  .app[data-lang="ua"] [data-lang="en"]{display:none}
+  .app:not([data-lang="both"]) [data-lang="both"]{display:none}
+  /* where a Ukrainian subtitle is rendered separately, the inline Ukrainian
+     twin would duplicate it in "both" mode */
+  .app[data-lang="both"] .nav-item [data-lang="ua"],
+  .app[data-lang="both"] .tool-head h2 > [data-lang="ua"]{display:none}
+
+  /* ---------- shell ---------- */
+  .app{display:flex;min-height:100vh}
+
+  /* ---------- sidebar ---------- */
+  .rail{
+    width:var(--rail);flex:0 0 var(--rail);background:var(--surface);
+    border-right:1px solid var(--rule);height:100vh;position:sticky;top:0;
+    max-height:100vh;
+    display:flex;flex-direction:column;overflow:hidden;
+  }
+  .rail-head{padding:1.1rem 1.1rem .85rem;border-bottom:1px solid var(--rule-soft);
+             display:flex;flex-direction:column;gap:.7rem}
+  .brand{font-family:var(--display);font-size:1.16rem;font-weight:600;line-height:1.15;
+         letter-spacing:-.01em;margin:0}
+  .brand small{display:block;font-family:var(--mono);font-size:.6rem;letter-spacing:.15em;
+               text-transform:uppercase;color:var(--magenta);margin-bottom:.3rem;font-weight:400}
+  .prog{display:flex;flex-direction:column;gap:.32rem}
+  .prog-bar{height:4px;background:var(--sink);border-radius:2px;overflow:hidden}
+  .prog-fill{height:100%;width:0;background:var(--magenta);transition:width .3s}
+  .prog-txt{font-family:var(--mono);font-size:.63rem;letter-spacing:.08em;color:var(--ink-faint);
+            display:flex;justify-content:space-between}
+  .rail-search{padding:.7rem 1.1rem;border-bottom:1px solid var(--rule-soft)}
+  .rail-search input{
+    width:100%;padding:.5rem .6rem;font-family:var(--body);font-size:.86rem;
+    background:var(--water);color:var(--ink);border:1px solid var(--rule);border-radius:2px;
+  }
+  .rail-search input:focus{outline:2px solid var(--magenta);outline-offset:1px}
+  .rail-nav{overflow-y:auto;flex:1;padding:.55rem 0 2rem}
+  .nav-group{font-family:var(--mono);font-size:.6rem;letter-spacing:.13em;text-transform:uppercase;
+             color:var(--ink-faint);padding:.95rem 1.1rem .34rem}
+  .nav-item{
+    display:flex;align-items:center;gap:.5rem;width:100%;text-align:left;
+    padding:.4rem 1.1rem;border:0;background:none;color:var(--ink-soft);
+    font-family:var(--body);font-size:.86rem;line-height:1.3;cursor:pointer;
+    border-left:2px solid transparent;
+  }
+  .nav-item:hover{background:var(--shoal);color:var(--ink)}
+  .nav-item[aria-current="true"]{background:var(--magenta-bg);color:var(--ink);
+                                 border-left-color:var(--magenta);font-weight:600}
+  .nav-item:focus-visible{outline:2px solid var(--magenta);outline-offset:-2px}
+  .nav-item .dot{width:6px;height:6px;border-radius:50%;flex:0 0 6px;border:1px solid var(--ink-faint)}
+  .nav-item.done .dot{background:var(--buoy-green);border-color:var(--buoy-green)}
+  .nav-item.tool .dot{border-radius:1px;border-color:var(--magenta)}
+
+  /* ---------- main ---------- */
+  .main{flex:1;min-width:0;display:flex;flex-direction:column}
+  .topbar{
+    position:sticky;top:0;z-index:20;background:var(--surface);
+    border-bottom:1px solid var(--rule);padding:.6rem clamp(1rem,3vw,2rem);
+    display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;
+  }
+  .topbar .doc-title{font-family:var(--display);font-size:1rem;font-weight:600;
+                     margin:0;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .burger{display:none;background:none;border:1px solid var(--rule);border-radius:2px;
+          color:var(--ink);padding:.35rem .55rem;cursor:pointer;font-size:1rem;line-height:1}
+  .seg{display:flex;border:1px solid var(--rule);border-radius:2px;overflow:hidden;flex:0 0 auto}
+  .seg button{
+    appearance:none;border:0;border-left:1px solid var(--rule);background:var(--surface);
+    color:var(--ink-soft);font-family:var(--mono);font-size:.7rem;letter-spacing:.05em;
+    padding:.4rem .62rem;cursor:pointer;
+  }
+  .seg button:first-child{border-left:0}
+  .seg button:hover{background:var(--shoal);color:var(--ink)}
+  .seg button[aria-pressed="true"]{background:var(--magenta);color:var(--surface)}
+  .seg button:focus-visible{outline:2px solid var(--magenta);outline-offset:-2px}
+
+  .content{padding:clamp(1.1rem,3.4vw,2.4rem);max-width:1000px;width:100%}
+  .doc{min-width:0}
+
+  /* ---------- article typography ---------- */
+  .doc h2{font-family:var(--display);font-size:clamp(1.5rem,3.6vw,2.05rem);font-weight:600;
+          line-height:1.14;letter-spacing:-.015em;text-wrap:balance;margin:0 0 .7rem}
+  .doc h3{font-family:var(--display);font-size:1.32rem;font-weight:600;line-height:1.2;
+          text-wrap:balance;margin:2.3rem 0 .55rem;padding-top:.9rem;border-top:1px solid var(--rule-soft)}
+  .doc h4{font-family:var(--body);font-size:.94rem;font-weight:700;letter-spacing:.02em;
+          margin:1.7rem 0 .45rem;color:var(--ink)}
+  .doc h5{font-family:var(--mono);font-size:.7rem;font-weight:400;letter-spacing:.13em;
+          text-transform:uppercase;color:var(--magenta);margin:1.4rem 0 .4rem}
+  .doc p{margin:0 0 .85rem;max-width:var(--measure)}
+  .doc ul,.doc ol{margin:0 0 1rem;padding-left:1.35rem}
+  .doc li{margin:0 0 .38rem;max-width:var(--measure)}
+  .doc hr{border:0;border-top:1px solid var(--rule-soft);margin:1.7rem 0}
+  .doc a{color:var(--magenta);text-decoration-thickness:1px;text-underline-offset:2px}
+  .doc a:focus-visible{outline:2px solid var(--magenta);outline-offset:2px}
+  .doc code{font-family:var(--mono);font-size:.86em;background:var(--shoal);
+            padding:.08em .3em;border-radius:2px}
+  .doc [data-lang="ua"]{color:var(--ink-soft)}
+  .doc h2 [data-lang="ua"],.doc h3 [data-lang="ua"]{color:var(--ink-soft);font-style:italic}
+  .doc strong{font-weight:700}
+
+  .pre-wrap{overflow-x:auto;background:var(--sink);border:1px solid var(--rule-soft);
+            border-radius:2px;margin:0 0 1.1rem}
+  .doc pre{font-family:var(--mono);font-size:.76rem;line-height:1.45;margin:0;padding:.9rem 1rem;
+           white-space:pre}
+
+  .table-wrap{overflow-x:auto;margin:0 0 1.2rem;border:1px solid var(--rule-soft);border-radius:2px}
+  .doc table{border-collapse:collapse;width:100%;min-width:32rem;font-size:.88rem}
+  .doc th,.doc td{text-align:left;vertical-align:top;padding:.5rem .75rem;
+                  border-bottom:1px solid var(--rule-soft)}
+  .doc th{font-family:var(--mono);font-size:.62rem;letter-spacing:.11em;text-transform:uppercase;
+          color:var(--ink-faint);font-weight:400;background:var(--sink);white-space:nowrap}
+  .doc tbody tr:last-child td{border-bottom:0}
+  .tabular{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+  .doc blockquote.callout{
+    margin:0 0 1.2rem;padding:.9rem 1.05rem;background:var(--magenta-bg);
+    border:1px solid var(--magenta);border-radius:2px;
+  }
+  .doc blockquote.callout > :last-child{margin-bottom:0}
+  .doc blockquote.callout h3,.doc blockquote.callout h4{border-top:0;padding-top:0;margin-top:.4rem}
+
+  .doc ul.checklist{list-style:none;padding-left:0}
+  .doc ul.checklist li{margin-bottom:.3rem}
+  .doc ul.checklist label{display:grid;grid-template-columns:1.05rem 1fr;gap:.6rem;
+                          align-items:start;cursor:pointer}
+  .doc ul.checklist input{margin:.34rem 0 0;accent-color:var(--magenta);width:.95rem;height:.95rem}
+  .doc ul.checklist input:checked + span{color:var(--ink-faint);text-decoration:line-through}
+  .doc details{border:1px solid var(--rule);border-radius:2px;padding:.7rem .9rem;margin:0 0 1.1rem;
+               background:var(--surface)}
+  .doc summary{cursor:pointer;font-weight:700}
+
+  /* ---------- doc footer ---------- */
+  .doc-foot{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;justify-content:space-between;
+            margin-top:2.4rem;padding-top:1.2rem;border-top:1px solid var(--rule)}
+  .btn{
+    appearance:none;font-family:var(--body);font-size:.85rem;padding:.5rem .85rem;
+    border:1px solid var(--rule);border-radius:2px;background:var(--surface);color:var(--ink);
+    cursor:pointer;
+  }
+  .btn:hover{background:var(--shoal)}
+  .btn:focus-visible{outline:2px solid var(--magenta);outline-offset:2px}
+  .btn.primary{background:var(--magenta);border-color:var(--magenta);color:#fff}
+  .btn.primary:hover{filter:brightness(1.08)}
+  .btn.done{background:var(--buoy-green);border-color:var(--buoy-green);color:#fff}
+  .btn-row{display:flex;gap:.55rem;flex-wrap:wrap}
+
+  /* ---------- search results ---------- */
+  .results{display:flex;flex-direction:column;gap:.7rem;max-width:var(--measure)}
+  .result{border:1px solid var(--rule);border-radius:2px;background:var(--surface);
+          padding:.75rem .9rem;cursor:pointer;text-align:left;width:100%;font:inherit;color:inherit}
+  .result:hover{background:var(--shoal)}
+  .result:focus-visible{outline:2px solid var(--magenta);outline-offset:2px}
+  .result b{display:block;font-family:var(--display);font-size:1.02rem;margin-bottom:.2rem}
+  .result span{font-size:.83rem;color:var(--ink-soft)}
+  .result mark{background:var(--magenta-bg);color:var(--ink);font-weight:700;padding:0 .1em}
+
+  /* ---------- tools ---------- */
+  .tool-head{margin:0 0 1.4rem}
+  .tool-head h2{font-family:var(--display);font-size:clamp(1.5rem,3.6vw,2.05rem);font-weight:600;
+                line-height:1.14;letter-spacing:-.015em;margin:0 0 .35rem}
+  .tool-head p{margin:0 0 .5rem;color:var(--ink-soft);max-width:var(--measure)}
+  .tool-head p:last-child{margin-bottom:0}
+  .tool-head h2 .sub{display:block;font-size:.95rem;font-style:italic;font-weight:400;
+                     color:var(--ink-soft);letter-spacing:0;margin-top:.1em}
+  .sep{color:var(--ink-faint)}
+  .card{background:var(--surface);border:1px solid var(--rule);border-radius:2px;
+        box-shadow:var(--shadow);padding:1.15rem 1.15rem 1.3rem;margin:0 0 1.3rem}
+  .card > :first-child{margin-top:0}
+  .card h3{font-family:var(--display);font-size:1.2rem;font-weight:600;margin:0 0 .6rem}
+  .card-label{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
+              color:var(--ink-faint);margin:0 0 .8rem;padding-bottom:.5rem;
+              border-bottom:1px solid var(--rule-soft)}
+
+  /* points of sail explorer */
+  .pos-wrap{display:grid;grid-template-columns:1fr;gap:1.2rem;align-items:start}
+  @media(min-width:860px){.pos-wrap{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}}
+  .pos-svg{width:100%;height:auto;display:block;touch-action:none;cursor:grab}
+  .pos-svg:active{cursor:grabbing}
+  .pos-svg .zone{fill:var(--shoal)}
+  .pos-svg .rim{fill:none;stroke:var(--rule);stroke-width:1}
+  .pos-svg .tick{stroke:var(--rule);stroke-width:1}
+  .pos-svg .arc{fill:none;stroke:var(--magenta);stroke-width:3;stroke-linecap:round}
+  .pos-svg .hull{fill:var(--surface);stroke:var(--ink);stroke-width:2;stroke-linejoin:round}
+  .pos-svg .sail{fill:var(--magenta-bg);stroke:var(--magenta);stroke-width:2;stroke-linejoin:round}
+  .pos-svg .boomline{stroke:var(--magenta);stroke-width:2.5;stroke-linecap:round}
+  .pos-svg .wind{stroke:var(--magenta);stroke-width:2;fill:none}
+  .pos-svg .windfill{fill:var(--magenta)}
+  .pos-svg .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.09em;fill:var(--ink-faint)}
+  .pos-svg .lbl-wind{font-family:var(--mono);font-size:11px;letter-spacing:.1em;fill:var(--magenta)}
+  .pos-svg .handle{fill:var(--magenta);stroke:var(--surface);stroke-width:2.5}
+  .pos-readout{display:flex;flex-direction:column;gap:.85rem}
+  .pos-name{font-family:var(--display);font-size:1.7rem;font-weight:600;line-height:1.1;margin:0}
+  .pos-name em{display:block;font-size:.98rem;font-style:italic;font-weight:400;
+               color:var(--ink-soft);margin-top:.15rem}
+  .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(7.5rem,1fr));gap:1px;
+         background:var(--rule-soft);border:1px solid var(--rule-soft)}
+  .facts div{background:var(--surface);padding:.6rem .7rem}
+  .facts dt{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;
+            color:var(--ink-faint);margin-bottom:.22rem}
+  .facts dd{margin:0;font-family:var(--mono);font-size:.95rem;font-variant-numeric:tabular-nums}
+  .pos-note{background:var(--magenta-bg);border:1px solid var(--magenta);border-radius:2px;
+            padding:.7rem .85rem;font-size:.88rem}
+  .pos-note p{margin:0}
+  .pos-note p + p{margin-top:.4rem}
+  .pos-presets{display:flex;flex-wrap:wrap;gap:.4rem}
+  .pos-presets button{font-family:var(--mono);font-size:.68rem;padding:.35rem .55rem;
+                      border:1px solid var(--rule);background:var(--surface);color:var(--ink-soft);
+                      border-radius:2px;cursor:pointer}
+  .pos-presets button:hover{background:var(--shoal);color:var(--ink)}
+  .pos-presets button[aria-pressed="true"]{background:var(--magenta);border-color:var(--magenta);color:#fff}
+  .pos-presets button:focus-visible{outline:2px solid var(--magenta);outline-offset:1px}
+  input[type=range]{width:100%;accent-color:var(--magenta)}
+
+  /* quiz */
+  .q-progress{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;color:var(--ink-faint);
+              text-transform:uppercase;margin:0 0 .7rem}
+  .q-text{font-family:var(--display);font-size:1.28rem;line-height:1.32;margin:0 0 1.1rem;
+          max-width:var(--measure)}
+  .q-answer{background:var(--shoal);border-left:3px solid var(--buoy-green);border-radius:2px;
+            padding:.85rem 1rem;margin:0 0 1.1rem;font-size:.94rem;max-width:var(--measure)}
+  .q-answer strong{color:var(--ink)}
+  .q-score{font-family:var(--mono);font-size:.78rem;color:var(--ink-soft);
+           font-variant-numeric:tabular-nums}
+  .q-final{font-family:var(--display);font-size:1.5rem;margin:0 0 .5rem}
+
+  /* flashcards */
+  .fc{
+    background:var(--surface);border:1px solid var(--rule);border-radius:3px;
+    min-height:11rem;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:.5rem;padding:1.6rem 1.2rem;text-align:center;cursor:pointer;user-select:none;
+    box-shadow:var(--shadow);
+  }
+  .fc:focus-visible{outline:2px solid var(--magenta);outline-offset:2px}
+  .fc .term{font-family:var(--display);font-size:1.85rem;font-weight:600;line-height:1.15}
+  .fc .say{font-family:var(--mono);font-size:.85rem;color:var(--magenta)}
+  .fc .topic{font-family:var(--mono);font-size:.6rem;letter-spacing:.13em;text-transform:uppercase;
+             color:var(--ink-faint)}
+  .fc .hint{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+            color:var(--ink-faint);margin-top:.3rem}
+  .fc-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}
+  select{font-family:var(--body);font-size:.85rem;padding:.45rem .55rem;background:var(--surface);
+         color:var(--ink);border:1px solid var(--rule);border-radius:2px}
+  select:focus-visible{outline:2px solid var(--magenta);outline-offset:1px}
+
+  /* calculator */
+  .calc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:.9rem;
+             margin:0 0 1.2rem}
+  .field{display:flex;flex-direction:column;gap:.28rem}
+  .field label{font-family:var(--mono);font-size:.6rem;letter-spacing:.11em;text-transform:uppercase;
+               color:var(--ink-faint)}
+  .field input[type=number]{font-family:var(--mono);font-size:1rem;padding:.45rem .55rem;
+    background:var(--water);color:var(--ink);border:1px solid var(--rule);border-radius:2px;width:100%}
+  .field input:focus-visible{outline:2px solid var(--magenta);outline-offset:1px}
+  .opt{display:flex;align-items:center;gap:.5rem;font-size:.85rem;cursor:pointer}
+  .opt input{accent-color:var(--magenta)}
+  .total-row td{font-weight:700;border-top:2px solid var(--rule)!important;background:var(--sink)}
+  .calc-note{font-size:.83rem;color:var(--ink-soft);max-width:var(--measure)}
+
+  /* logbook */
+  .log-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:.75rem;
+            margin:0 0 .9rem}
+  .log-form input,.log-form textarea{font-family:var(--body);font-size:.88rem;padding:.45rem .55rem;
+    background:var(--water);color:var(--ink);border:1px solid var(--rule);border-radius:2px;width:100%}
+  .log-form textarea{grid-column:1/-1;min-height:4.5rem;resize:vertical}
+  .log-form input:focus-visible,.log-form textarea:focus-visible{outline:2px solid var(--magenta);outline-offset:1px}
+  .empty{color:var(--ink-faint);font-style:italic;font-size:.9rem}
+  #lgFallback:not(:empty){margin-top:1rem;padding-top:1rem;border-top:1px solid var(--rule-soft)}
+  #lgDump{width:100%;font-family:var(--mono);font-size:.78rem;line-height:1.5;
+    background:var(--water);color:var(--ink);border:1px solid var(--rule);
+    border-radius:2px;padding:.6rem;resize:vertical}
+  #lgDump:focus-visible{outline:2px solid var(--magenta);outline-offset:1px}
+
+  .warn-box{background:var(--magenta-bg);border:1px solid var(--magenta);border-radius:2px;
+            padding:.85rem 1rem;font-size:.88rem;margin:0 0 1.2rem;max-width:var(--measure)}
+  .warn-box p{margin:0}
+  .warn-box p + p{margin-top:.45rem}
+
+  .toast{
+    position:fixed;left:50%;bottom:1.4rem;transform:translateX(-50%);z-index:100;
+    background:var(--ink);color:var(--water);font-size:.85rem;padding:.6rem 1rem;border-radius:3px;
+    box-shadow:0 4px 14px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .22s;
+  }
+  .toast.show{opacity:1}
+
+  .scrim{display:none}
+
+  /* ---------- mobile ---------- */
+  @media(max-width:860px){
+    .burger{display:block}
+    .rail{
+      position:fixed;left:0;top:0;bottom:0;z-index:50;transform:translateX(-102%);
+      transition:transform .22s ease;box-shadow:0 0 26px rgba(0,0,0,.22);height:100dvh;
+    }
+    .app.nav-open .rail{transform:none}
+    .app.nav-open .scrim{display:block;position:fixed;inset:0;z-index:40;
+                         background:rgba(4,12,18,.45)}
+    .doc table{min-width:26rem}
+    .content{padding-bottom:3rem}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+  }
+</style>
+
+<!--SITE_NAV-->
+<div class="app" data-lang="both" id="app">
+  <div class="scrim" id="scrim"></div>
+
+  <aside class="rail" id="rail">
+    <div class="rail-head">
+      <h1 class="brand"><small>Halifax · Nova Scotia</small>Sailing, zero to skipper</h1>
+      <div class="prog">
+        <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+        <div class="prog-txt"><span id="progTxt">0 of 21 modules</span><span id="progPct">0%</span></div>
+      </div>
+    </div>
+    <div class="rail-search">
+      <input type="search" id="search" placeholder="Search the course…" aria-label="Search the course">
+    </div>
+    <nav class="rail-nav" id="nav" aria-label="Course contents"></nav>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="burger" id="burger" aria-label="Open contents" aria-expanded="false">☰</button>
+      <p class="doc-title" id="docTitle">Overview</p>
+      <div class="seg" role="group" aria-label="Language">
+        <button type="button" data-lang-set="both" aria-pressed="true">EN+UA</button>
+        <button type="button" data-lang-set="en" aria-pressed="false">EN</button>
+        <button type="button" data-lang-set="ua" aria-pressed="false">UA</button>
+      </div>
+    </header>
+    <main class="content" id="content" tabindex="-1"></main>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  const DOCS     = /*__DOCS__*/'{}';
+  const NAV      = /*__NAV__*/'[]';
+  const GLOSSARY = /*__GLOSSARY__*/'[]';
+  const QUIZ     = /*__QUIZ__*/'[]';
+  const PROGRESS_IDS = /*__PROGRESS__*/'[]';
+
+  const TOOLS = [
+    { id: "t-pos",   en: "Points of sail explorer", ua: "Курси відносно вітру" },
+    { id: "t-quiz",  en: "PCOC practice exam",      ua: "Пробний екзамен PCOC" },
+    { id: "t-cards", en: "Glossary flashcards",     ua: "Картки глосарія" },
+    { id: "t-calc",  en: "Boat cost calculator",    ua: "Калькулятор вартості судна" },
+    { id: "t-log",   en: "Logbook",                 ua: "Судновий журнал" }
+  ];
+
+  /* ---------------- persistence (degrades to memory) ---------------- */
+  const KEY = "halifax-sailing-v1";
+  let mem = null;
+  function load() {
+    if (mem) return mem;
+    try {
+      mem = JSON.parse(localStorage.getItem(KEY) || "{}");
+    } catch (e) { mem = {}; }
+    if (!mem.done)  mem.done = {};
+    if (!mem.ck)    mem.ck = {};
+    if (!mem.log)   mem.log = [];
+    if (!mem.quiz)  mem.quiz = {};
+    return mem;
+  }
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(load())); } catch (e) { /* memory only */ }
+  }
+  const S = load();
+
+  /* ---------------- helpers ---------------- */
+  const $  = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => Array.prototype.slice.call((r || document).querySelectorAll(s));
+  const app = $("#app"), content = $("#content"), docTitle = $("#docTitle");
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+
+  let toastT;
+  function toast(msg) {
+    const el = $("#toast");
+    el.textContent = msg; el.classList.add("show");
+    clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove("show"), 2200);
+  }
+
+  const money = n => "$" + Math.round(n).toLocaleString("en-CA");
+
+  // Offer a generated file to the browser. Returns false if the environment
+  // refuses (blocked downloads, no Blob/URL support) so the caller can fall
+  // back to something the reader can still act on.
+  function saveTextFile(filename, text, mime) {
+    try {
+      const blob = new Blob([text], { type: mime || "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      a.rel = "noopener";
+      a.style.display = "none";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 30000);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // Last resort when a download cannot be started: put the text on screen,
+  // selected, so it can be copied.
+  function showCopyFallback(text) {
+    const host = document.getElementById("lgFallback");
+    if (!host) return;
+    host.innerHTML =
+      '<p class="card-label">Copy your logbook · Скопіюйте журнал</p>' +
+      '<textarea id="lgDump" rows="12" readonly aria-label="Logbook as Markdown"></textarea>';
+    const ta = document.getElementById("lgDump");
+    ta.value = text;
+    ta.focus();
+    ta.select();
+  }
+
+  // Bilingual heading + intro for a tool view. In "both" mode the Ukrainian
+  // sits under the English as a subtitle / separate paragraph rather than being
+  // concatenated onto it.
+  function toolHead(en, ua, dEn, dUa) {
+    return '<div class="tool-head"><h2>' +
+             '<span data-lang="en">' + en + "</span>" +
+             '<span data-lang="ua">' + ua + "</span>" +
+             '<em class="sub" data-lang="both">' + ua + "</em>" +
+           "</h2>" +
+           '<p data-lang="en">' + dEn + "</p>" +
+           '<p data-lang="ua">' + dUa + "</p></div>";
+  }
+
+  // An inline EN/UA pair, separated when both are shown
+  const pair = (en, ua) =>
+    '<span data-lang="en">' + en + "</span>" +
+    '<span class="sep" data-lang="both"> / </span>' +
+    '<span data-lang="ua">' + ua + "</span>";
+
+  /* ---------------- navigation ---------------- */
+  let current = "readme";
+
+  function buildNav() {
+    const nav = $("#nav");
+    let h = "";
+    NAV.forEach(g => {
+      h += '<p class="nav-group">' + esc(g.group) + "</p>";
+      g.items.forEach(it => {
+        h += '<button class="nav-item" data-go="' + it.id + '">' +
+               '<span class="dot"></span>' +
+               '<span><span data-lang="en">' + esc(it.en) + "</span>" +
+               '<span data-lang="ua">' + esc(it.ua) + "</span></span></button>";
+      });
+    });
+    h += '<p class="nav-group">Interactive tools · Інструменти</p>';
+    TOOLS.forEach(t => {
+      h += '<button class="nav-item tool" data-go="' + t.id + '">' +
+             '<span class="dot"></span>' +
+             '<span><span data-lang="en">' + esc(t.en) + "</span>" +
+             '<span data-lang="ua">' + esc(t.ua) + "</span></span></button>";
+    });
+    nav.innerHTML = h;
+    nav.addEventListener("click", e => {
+      const b = e.target.closest("[data-go]");
+      if (b) { go(b.dataset.go); closeNav(); }
+    });
+  }
+
+  function refreshNav() {
+    $$("#nav .nav-item").forEach(b => {
+      const id = b.dataset.go;
+      b.setAttribute("aria-current", id === current ? "true" : "false");
+      b.classList.toggle("done", !!S.done[id]);
+    });
+    const total = PROGRESS_IDS.length;
+    const done = PROGRESS_IDS.filter(id => S.done[id]).length;
+    const pct = total ? Math.round(done / total * 100) : 0;
+    $("#progFill").style.width = pct + "%";
+    $("#progTxt").textContent = done + " of " + total + " modules";
+    $("#progPct").textContent = pct + "%";
+  }
+
+  function closeNav() { app.classList.remove("nav-open"); $("#burger").setAttribute("aria-expanded", "false"); }
+
+  /* ---------------- document rendering ---------------- */
+  const order = [];
+  NAV.forEach(g => g.items.forEach(i => order.push(i.id)));
+
+  function renderDoc(id) {
+    const d = DOCS[id];
+    if (!d) return;
+    docTitle.textContent = d.t_en;
+    const idx = order.indexOf(id);
+    const prev = idx > 0 ? order[idx - 1] : null;
+    const next = idx >= 0 && idx < order.length - 1 ? order[idx + 1] : null;
+    const isMod = PROGRESS_IDS.indexOf(id) >= 0;
+    const done = !!S.done[id];
+
+    let foot = '<div class="doc-foot"><div class="btn-row">';
+    if (prev) foot += '<button class="btn" data-go="' + prev + '">← ' + esc(DOCS[prev].t_en) + "</button>";
+    if (next) foot += '<button class="btn" data-go="' + next + '">' + esc(DOCS[next].t_en) + " →</button>";
+    foot += "</div>";
+    if (isMod) {
+      foot += '<button class="btn ' + (done ? "done" : "primary") + '" id="markBtn">' +
+              (done ? "✓ Completed" : "Mark as complete") + "</button>";
+    }
+    foot += "</div>";
+
+    content.innerHTML = '<article class="doc">' + d.html + "</article>" + foot;
+    wireDoc(id);
+    content.focus({ preventScroll: true });
+    window.scrollTo(0, 0);
+  }
+
+  function wireDoc(id) {
+    // persistent checkboxes, keyed by document + index
+    $$(".ck", content).forEach((box, i) => {
+      const k = id + ":" + i;
+      box.checked = !!S.ck[k];
+      box.addEventListener("change", () => {
+        if (box.checked) S.ck[k] = 1; else delete S.ck[k];
+        save();
+      });
+    });
+    const mark = $("#markBtn");
+    if (mark) mark.addEventListener("click", () => {
+      if (S.done[id]) delete S.done[id]; else S.done[id] = 1;
+      save(); refreshNav(); renderDoc(id);
+      toast(S.done[id] ? "Marked complete" : "Marked incomplete");
+    });
+    content.addEventListener("click", navDelegate);
+  }
+
+  function navDelegate(e) {
+    const b = e.target.closest("[data-go],[data-nav]");
+    if (!b) return;
+    const t = b.dataset.go || b.dataset.nav;
+    if (t) { e.preventDefault(); go(t); }
+  }
+
+  /* ---------------- router ---------------- */
+  function go(id) {
+    current = id;
+    $("#search").value = "";
+    if (id.indexOf("t-") === 0) renderTool(id); else renderDoc(id);
+    refreshNav();
+    try { history.replaceState(null, "", "#/" + id); } catch (e) {}
+  }
+
+  /* ---------------- search ---------------- */
+  let INDEX = null;
+  function buildIndex() {
+    if (INDEX) return INDEX;
+    INDEX = {};
+    const scratch = document.createElement("div");
+    Object.keys(DOCS).forEach(id => {
+      scratch.innerHTML = DOCS[id].html;
+      INDEX[id] = (scratch.textContent || "").replace(/\s+/g, " ").toLowerCase();
+    });
+    scratch.innerHTML = "";
+    return INDEX;
+  }
+
+  function runSearch(q) {
+    q = q.trim().toLowerCase();
+    if (q.length < 2) { go(current); return; }
+    const idx = buildIndex();
+    const hits = [];
+    Object.keys(DOCS).forEach(id => {
+      const pos = idx[id].indexOf(q);
+      if (pos >= 0) {
+        const from = Math.max(0, pos - 70);
+        hits.push({ id: id, title: DOCS[id].t_en, snippet: idx[id].slice(from, pos + 130) });
+      }
+    });
+    docTitle.textContent = "Search";
+    if (!hits.length) {
+      content.innerHTML = '<div class="tool-head"><h2>No matches</h2>' +
+        "<p>Nothing found for “" + esc(q) + "”. Try a shorter or more common word.</p></div>";
+      return;
+    }
+    let h = '<div class="tool-head"><h2>' + hits.length + ' section' + (hits.length > 1 ? "s" : "") +
+            " matching “" + esc(q) + "”</h2></div><div class=\"results\">";
+    hits.forEach(r => {
+      const s = esc(r.snippet).replace(new RegExp("(" + q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "gi"),
+                                       "<mark>$1</mark>");
+      h += '<button class="result" data-go="' + r.id + '"><b>' + esc(r.title) + "</b><span>…" + s + "…</span></button>";
+    });
+    h += "</div>";
+    content.innerHTML = h;
+    content.addEventListener("click", navDelegate);
+  }
+
+  /* ================= TOOL: points of sail ================= */
+  const POS_ZONES = [
+    { lo: 0,   max: 35,  en: "In irons",     ua: "У левентик",        trim: null,
+      note_en: "The sails are edge-on to the wind and just flap. The boat stops. There is a roughly 90° wedge either side of the wind where no boat can sail — to get somewhere upwind you must zigzag, and that costs you at least 1.4× the straight-line distance.",
+      note_ua: "Вітрила стоять ребром до вітру і просто лопотять. Судно зупиняється. Є сектор приблизно 90°, де жодне судно не може йти — щоб дістатися проти вітру, треба лавірувати, і це коштує щонайменше 1,4× прямої відстані." },
+    { lo: 35,  max: 55,  en: "Close-hauled", ua: "Крутий бейдевінд",  trim: "hard in",
+      note_en: "As close to the wind as the boat will sail. Sheets in hard, maximum heel, and the apparent wind adds to the true wind so it feels much windier than it is. Steer so the windward telltales just lift — that narrow band is the groove.",
+      note_ua: "Настільки круто до вітру, наскільки судно може йти. Шкоти вибрані, максимальний крен, видимий вітер додається до справжнього. Кермуйте так, щоб навітряні колдунчики ледь піднімалися." },
+    { lo: 55,  max: 75,  en: "Close reach",  ua: "Повний бейдевінд",  trim: "eased slightly",
+      note_en: "Fast and comfortable — the boat is still using lift efficiently but is less pressed than close-hauled. A good course for making ground with the crew happy.",
+      note_ua: "Швидко й комфортно — судно ще ефективно використовує підйомну силу, але менш притиснуте, ніж на крутому бейдевінді." },
+    { lo: 75,  max: 105, en: "Beam reach",   ua: "Галфвінд",          trim: "about halfway",
+      note_en: "Wind on the beam. Usually the fastest and most pleasant point of sail, and the one to start a beginner on. Sails about halfway out, moderate heel, everything under control.",
+      note_ua: "Вітер у траверз. Зазвичай найшвидший і найприємніший курс, і саме з нього варто починати новачка. Вітрила приблизно наполовину, помірний крен." },
+    { lo: 105, max: 155, en: "Broad reach",  ua: "Бакштаг",           trim: "well eased",
+      note_en: "Fast, stable and comfortable. This is the downwind course to prefer — it is quicker than a dead run and far less likely to gybe unexpectedly.",
+      note_ua: "Швидко, стабільно і комфортно. Саме цей попутний курс варто обирати — він швидший за чистий фордевінд і значно менш схильний до раптового повороту." },
+    { lo: 155, max: 181, en: "Running",      ua: "Фордевінд",         trim: "all the way out",
+      note_en: "Dead downwind. Feels calm because your speed subtracts from the true wind — which is exactly why it is deceptive and dangerous. The least stable point of sail: a small steering error can flip the wind to the other side of the mainsail and slam the boom across. Rig a preventer.",
+      note_ua: "Чистий фордевінд. Відчувається спокійно, бо ваша швидкість віднімається від справжнього вітру — саме тому це оманливо й небезпечно. Найменш стабільний курс: мала помилка керування може перекинути вітер на інший бік грота і кинути ґік через судно. Заведіть завал-таль." }
+  ];
+
+  function zoneFor(a) {
+    a = Math.abs(a);
+    for (let i = 0; i < POS_ZONES.length; i++) if (a < POS_ZONES[i].max) return POS_ZONES[i];
+    return POS_ZONES[POS_ZONES.length - 1];
+  }
+  function trimAngle(a) {
+    a = Math.abs(a);
+    if (a < 35) return 0;
+    return Math.max(0, Math.min(85, (a - 30) * 0.62));
+  }
+
+  let posAngle = 90;   // signed: + = starboard tack (wind from starboard)
+
+  function renderPOS() {
+    docTitle.textContent = "Points of sail explorer";
+    content.innerHTML =
+      toolHead("Points of sail explorer", "Курси відносно вітру",
+        "Drag the boat around the circle, or use the slider and the arrow keys. The wind always " +
+        "blows from the top. Watch the sail ease out as you turn away from the wind — that " +
+        "relationship is 80% of sail trim.",
+        "Тягніть судно по колу або використовуйте повзунок і стрілки. Вітер завжди дме зверху. " +
+        "Дивіться, як вітрило витравлюється, коли ви відвертаєте від вітру — це співвідношення " +
+        "і є 80% налаштування вітрил.") +
+      '<div class="card"><div class="pos-wrap">' +
+        '<div><svg class="pos-svg" id="posSvg" viewBox="0 0 400 406" role="img" ' +
+          'aria-label="Interactive points of sail diagram"></svg>' +
+          '<label class="field" style="margin-top:.8rem">' +
+            '<span style="font-family:var(--mono);font-size:.6rem;letter-spacing:.11em;' +
+            'text-transform:uppercase;color:var(--ink-faint)">Angle off the wind</span>' +
+            '<input type="range" id="posRange" min="-180" max="180" step="1" value="90" ' +
+            'aria-label="Angle off the wind in degrees">' +
+          "</label>" +
+          '<div class="pos-presets" id="posPresets"></div>' +
+        "</div>" +
+        '<div class="pos-readout" id="posOut"></div>' +
+      "</div></div>";
+
+    const presets = [
+      ["In irons", 0], ["Close-hauled", 45], ["Close reach", 65],
+      ["Beam reach", 90], ["Broad reach", 135], ["Running", 180]
+    ];
+    $("#posPresets").innerHTML = presets.map(p =>
+      '<button type="button" data-a="' + p[1] + '">' + esc(p[0]) + "</button>").join("");
+    $("#posPresets").addEventListener("click", e => {
+      const b = e.target.closest("[data-a]");
+      if (b) setPOS(Number(b.dataset.a) * (posAngle < 0 ? -1 : 1));
+    });
+
+    const range = $("#posRange");
+    range.addEventListener("input", () => setPOS(Number(range.value)));
+
+    const svg = $("#posSvg");
+    let dragging = false;
+    function fromEvent(ev) {
+      const r = svg.getBoundingClientRect();
+      const x = (ev.clientX - r.left) / r.width * 400 - 200;
+      const y = (ev.clientY - r.top) / r.height * 400 - 200;
+      // 0° = pointing at the wind (up); positive = clockwise (starboard tack)
+      let a = Math.atan2(x, -y) * 180 / Math.PI;
+      setPOS(Math.round(a));
+    }
+    svg.addEventListener("pointerdown", e => {
+      dragging = true; svg.setPointerCapture(e.pointerId); fromEvent(e); e.preventDefault();
+    });
+    svg.addEventListener("pointermove", e => { if (dragging) fromEvent(e); });
+    svg.addEventListener("pointerup",     () => { dragging = false; });
+    svg.addEventListener("pointercancel", () => { dragging = false; });
+    svg.setAttribute("tabindex", "0");
+    svg.addEventListener("keydown", e => {
+      const step = e.shiftKey ? 15 : 5;
+      if (e.key === "ArrowRight" || e.key === "ArrowUp")   { setPOS(posAngle + step); e.preventDefault(); }
+      if (e.key === "ArrowLeft"  || e.key === "ArrowDown") { setPOS(posAngle - step); e.preventDefault(); }
+    });
+
+    setPOS(posAngle);
+  }
+
+  function setPOS(a) {
+    while (a > 180) a -= 360;
+    while (a < -180) a += 360;
+    posAngle = a;
+    const range = $("#posRange");
+    if (range) range.value = String(a);
+    drawPOS();
+  }
+
+  function drawPOS() {
+    const svg = $("#posSvg");
+    if (!svg) return;
+    const cx = 200, cy = 210, R = 132;
+    const a = posAngle, abs = Math.abs(a), sign = a < 0 ? -1 : 1;
+    const z = zoneFor(a), tr = trimAngle(a);
+    const rad = a * Math.PI / 180;
+    const bx = cx + Math.sin(rad) * R, by = cy - Math.cos(rad) * R;
+
+    // hull: bow up in local space, rotated to the heading
+    const hull =
+      '<g transform="translate(' + cx + ',' + cy + ') rotate(' + a + ')">' +
+        '<path class="hull" d="M0,-34 C11,-16 13,6 10,30 L-10,30 C-13,6 -11,-16 0,-34 Z"/>' +
+        (z.trim === null
+          ? '<line class="boomline" x1="0" y1="-14" x2="0" y2="26" stroke-dasharray="3 3"/>'
+          : '<g transform="rotate(' + (-sign * tr) + ')">' +
+              '<path class="sail" d="M0,-14 Q' + (-sign * 13) + ',6 0,26 Z"/>' +
+              '<line class="boomline" x1="0" y1="-14" x2="0" y2="26"/>' +
+            "</g>") +
+        '<circle cx="0" cy="-14" r="1.9" fill="var(--ink)"/>' +
+      "</g>";
+
+    // no-go wedge, 35° either side of the wind
+    const w = 35 * Math.PI / 180;
+    const zx1 = cx + Math.sin(-w) * R, zy1 = cy - Math.cos(-w) * R;
+    const zx2 = cx + Math.sin(w) * R,  zy2 = cy - Math.cos(w) * R;
+
+    let ticks = "";
+    for (let d = 0; d <= 180; d += 45) {
+      [d, -d].forEach(dd => {
+        const r2 = dd * Math.PI / 180;
+        ticks += '<line class="tick" x1="' + (cx + Math.sin(r2) * (R - 7)) + '" y1="' + (cy - Math.cos(r2) * (R - 7)) +
+                 '" x2="' + (cx + Math.sin(r2) * R) + '" y2="' + (cy - Math.cos(r2) * R) + '"/>';
+      });
+    }
+
+    // arc along the rim marking the band the boat is currently in
+    const zLo = z.lo * sign, zHi = Math.min(z.max, 180) * sign;
+    const p1 = [cx + Math.sin(zLo * Math.PI / 180) * R, cy - Math.cos(zLo * Math.PI / 180) * R];
+    const p2 = [cx + Math.sin(zHi * Math.PI / 180) * R, cy - Math.cos(zHi * Math.PI / 180) * R];
+    const sweep = sign > 0 ? 1 : 0;
+    const bandArc = '<path class="arc" d="M' + p1[0] + ',' + p1[1] + ' A' + R + ',' + R +
+                    ' 0 0,' + sweep + ' ' + p2[0] + ',' + p2[1] + '"/>';
+
+    const LR = R + 17;   // degree labels sit clear of the drag handle
+    svg.innerHTML =
+      '<line class="wind" x1="200" y1="14" x2="200" y2="48"/>' +
+      '<polygon class="windfill" points="200,58 195,44 205,44"/>' +
+      '<text class="lbl-wind" x="212" y="36">WIND · ВІТЕР</text>' +
+      '<path class="zone" d="M' + cx + ',' + cy + ' L' + zx1 + ',' + zy1 +
+        ' A' + R + ',' + R + ' 0 0,1 ' + zx2 + ',' + zy2 + ' Z"/>' +
+      '<circle class="rim" cx="' + cx + '" cy="' + cy + '" r="' + R + '"/>' +
+      ticks + bandArc +
+      '<text class="lbl" x="' + cx + '" y="' + (cy - R + 30) + '" text-anchor="middle">NO-GO</text>' +
+      '<text class="lbl" x="' + (cx - LR) + '" y="' + (cy + 4) + '" text-anchor="end">90°</text>' +
+      '<text class="lbl" x="' + (cx + LR) + '" y="' + (cy + 4) + '">90°</text>' +
+      '<text class="lbl" x="' + cx + '" y="' + (cy + LR + 6) + '" text-anchor="middle">180°</text>' +
+      hull +
+      '<circle class="handle" cx="' + bx + '" cy="' + by + '" r="7"/>';
+
+    const tack = abs < 3 || abs > 177 ? "—" : (sign > 0 ? "Starboard" : "Port");
+    const tackUa = abs < 3 || abs > 177 ? "—" : (sign > 0 ? "Правий" : "Лівий");
+    const boom = z.trim === null ? "centred" : (sign > 0 ? "to port" : "to starboard");
+    const boomUa = z.trim === null ? "по центру" : (sign > 0 ? "на лівий борт" : "на правий борт");
+
+    $("#posOut").innerHTML =
+      '<h3 class="pos-name">' + esc(z.en) + "<em>" + esc(z.ua) + "</em></h3>" +
+      '<dl class="facts">' +
+        "<div><dt>Angle off wind</dt><dd>" + Math.round(abs) + "°</dd></div>" +
+        "<div><dt>Tack</dt><dd>" + pair(tack, tackUa) + "</dd></div>" +
+        "<div><dt>Boom</dt><dd>" + pair(boom, boomUa) + "</dd></div>" +
+        "<div><dt>Sail trim</dt><dd>" + (z.trim === null ? "flapping" : Math.round(tr) + "° out") + "</dd></div>" +
+      "</dl>" +
+      '<div class="pos-note"><p data-lang="en">' + z.note_en + "</p>" +
+        '<p data-lang="ua">' + z.note_ua + "</p></div>";
+
+    $$("#posPresets button").forEach(b => {
+      b.setAttribute("aria-pressed", String(Math.abs(Number(b.dataset.a) - abs) < 3));
+    });
+  }
+
+  /* ================= TOOL: PCOC quiz ================= */
+  let qOrder = [], qIdx = 0, qShown = false, qRight = 0, qWrong = 0;
+
+  function startQuiz() {
+    qOrder = QUIZ.map((_, i) => i);
+    for (let i = qOrder.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const t = qOrder[i]; qOrder[i] = qOrder[j]; qOrder[j] = t;
+    }
+    qIdx = 0; qShown = false; qRight = 0; qWrong = 0;
+    drawQuiz();
+  }
+
+  function renderQuiz() {
+    docTitle.textContent = "PCOC practice exam";
+    const best = S.quiz.best;
+    content.innerHTML =
+      toolHead("PCOC practice exam", "Пробний екзамен PCOC",
+        QUIZ.length + " questions in the style of the real Pleasure Craft Operator Card exam, " +
+        "drawn from the course. Answer in your head, reveal, and mark yourself honestly.",
+        QUIZ.length + " питань у стилі справжнього екзамену PCOC, узятих з курсу. " +
+        "Відповідайте подумки, відкривайте відповідь і оцінюйте себе чесно.") +
+      '<div class="warn-box">' +
+        '<p data-lang="en">This is <strong>practice, not the exam</strong>. The real PCOC is taken through a ' +
+        "Transport Canada accredited provider — typically about 50 multiple-choice questions with a pass mark " +
+        "around 75%. Confirm the format with your provider.</p>" +
+        '<p data-lang="ua">Це <strong>тренування, а не екзамен</strong>. Справжній PCOC складають через ' +
+        "акредитованого Transport Canada провайдера — зазвичай близько 50 питань з вибором відповіді, " +
+        "прохідний бал близько 75%. Уточніть формат у провайдера.</p>" +
+      "</div>" +
+      '<div class="card" id="qCard"></div>' +
+      (best !== undefined ? '<p class="q-score">Best so far: ' + best + "%</p>" : "");
+    startQuiz();
+  }
+
+  function drawQuiz() {
+    const card = $("#qCard");
+    if (!card) return;
+    if (qIdx >= qOrder.length) {
+      const total = qRight + qWrong;
+      const pct = total ? Math.round(qRight / total * 100) : 0;
+      if (S.quiz.best === undefined || pct > S.quiz.best) { S.quiz.best = pct; save(); }
+      card.innerHTML =
+        '<p class="card-label">Result · Результат</p>' +
+        '<p class="q-final">' + qRight + " / " + total + " — " + pct + "%</p>" +
+        "<p>" + (pct >= 75
+          ? '<span data-lang="en">That is above the typical 75% pass mark. Book the real thing.</span>' +
+            '<span data-lang="ua">Це вище типового прохідного балу 75%. Бронюйте справжній екзамен.</span>'
+          : '<span data-lang="en">Below the typical 75% pass mark. Review modules 07, 08 and 12, then try again.</span>' +
+            '<span data-lang="ua">Нижче типового прохідного балу 75%. Перегляньте модулі 07, 08 і 12, потім спробуйте знову.</span>') +
+        "</p>" +
+        '<div class="btn-row" style="margin-top:1rem">' +
+          '<button class="btn primary" id="qAgain">Try again</button>' +
+          '<button class="btn" data-go="m12">Review Module 12</button>' +
+        "</div>";
+      $("#qAgain").addEventListener("click", startQuiz);
+      card.addEventListener("click", navDelegate);
+      return;
+    }
+    const q = QUIZ[qOrder[qIdx]];
+    let h = '<p class="q-progress">Question ' + (qIdx + 1) + " of " + qOrder.length +
+            ' · <span class="q-score">' + qRight + " right, " + qWrong + " wrong</span></p>" +
+            '<p class="q-text">' + q.q + "</p>";
+    if (qShown) {
+      h += '<div class="q-answer"><strong>Answer.</strong> ' + q.a + "</div>" +
+           '<div class="btn-row">' +
+             '<button class="btn" id="qRight">✓ I had it right</button>' +
+             '<button class="btn" id="qWrong">✗ I had it wrong</button>' +
+           "</div>";
+    } else {
+      h += '<div class="btn-row"><button class="btn primary" id="qShow">Reveal answer</button>' +
+           '<button class="btn" id="qSkip">Skip</button></div>';
+    }
+    card.innerHTML = h;
+    if (qShown) {
+      $("#qRight").addEventListener("click", () => { qRight++; qIdx++; qShown = false; drawQuiz(); });
+      $("#qWrong").addEventListener("click", () => { qWrong++; qIdx++; qShown = false; drawQuiz(); });
+    } else {
+      $("#qShow").addEventListener("click", () => { qShown = true; drawQuiz(); });
+      $("#qSkip").addEventListener("click", () => { qIdx++; qShown = false; drawQuiz(); });
+    }
+  }
+
+  /* ================= TOOL: flashcards ================= */
+  let fcPool = [], fcIdx = 0, fcFlipped = false, fcDir = "en2ua", fcTopic = "all";
+  let fcRight = 0, fcSeen = 0;
+
+  function renderCards() {
+    docTitle.textContent = "Glossary flashcards";
+    const topics = [];
+    GLOSSARY.forEach(t => { if (t.topic && topics.indexOf(t.topic) < 0) topics.push(t.topic); });
+    content.innerHTML =
+      toolHead("Glossary flashcards", "Картки глосарія",
+        GLOSSARY.length + " terms. Tap the card to flip, then say whether you knew it. Your " +
+        "instructor teaches in English, so drill EN → UA until the English word arrives with " +
+        "no translation lag.",
+        GLOSSARY.length + " термінів. Натисніть картку, щоб перевернути. Ваш інструктор " +
+        "викладає англійською, тому тренуйте EN → UA, доки англійське слово не приходитиме " +
+        "без затримки на переклад.") +
+      '<div class="card">' +
+        '<div class="fc-controls" style="margin:0 0 1rem">' +
+          '<select id="fcTopic" aria-label="Topic"><option value="all">All topics (' + GLOSSARY.length + ")</option>" +
+            topics.map(t => '<option value="' + esc(t) + '">' + esc(t) + "</option>").join("") + "</select>" +
+          '<select id="fcDir" aria-label="Direction">' +
+            '<option value="en2ua">English → Українська</option>' +
+            '<option value="ua2en">Українська → English</option></select>' +
+          '<button class="btn" id="fcShuffle">Shuffle</button>' +
+        "</div>" +
+        '<div class="fc" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, activate to flip"></div>' +
+        '<div class="fc-controls" id="fcBtns"></div>' +
+        '<p class="q-score" id="fcScore" style="margin:.9rem 0 0"></p>' +
+      "</div>";
+    $("#fcTopic").addEventListener("change", e => { fcTopic = e.target.value; buildPool(); });
+    $("#fcDir").addEventListener("change", e => { fcDir = e.target.value; drawCard(); });
+    $("#fcShuffle").addEventListener("click", buildPool);
+    const c = $("#fcCard");
+    c.addEventListener("click", flip);
+    c.addEventListener("keydown", e => {
+      if (e.key === " " || e.key === "Enter") { e.preventDefault(); flip(); }
+    });
+    buildPool();
+  }
+
+  function buildPool() {
+    fcPool = GLOSSARY.filter(t => fcTopic === "all" || t.topic === fcTopic);
+    for (let i = fcPool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const t = fcPool[i]; fcPool[i] = fcPool[j]; fcPool[j] = t;
+    }
+    fcIdx = 0; fcFlipped = false; fcRight = 0; fcSeen = 0;
+    drawCard();
+  }
+
+  function flip() { fcFlipped = !fcFlipped; drawCard(); }
+
+  function drawCard() {
+    const card = $("#fcCard");
+    if (!card || !fcPool.length) { if (card) card.innerHTML = '<p class="empty">No terms in this topic.</p>'; return; }
+    const t = fcPool[fcIdx % fcPool.length];
+    const front = fcDir === "en2ua" ? t.en : t.ua;
+    const back  = fcDir === "en2ua" ? t.ua : t.en;
+    card.innerHTML = fcFlipped
+      ? '<div class="topic">' + esc(t.topic) + "</div>" +
+        '<div class="term">' + esc(back) + "</div>" +
+        (t.say && fcDir === "ua2en" ? '<div class="say">' + esc(t.say) + "</div>" : "") +
+        '<div class="hint">' + esc(front) + "</div>"
+      : '<div class="topic">' + esc(t.topic) + "</div>" +
+        '<div class="term">' + esc(front) + "</div>" +
+        (t.say && fcDir === "en2ua" ? '<div class="say">' + esc(t.say) + "</div>" : "") +
+        '<div class="hint">tap to flip</div>';
+    $("#fcBtns").innerHTML = fcFlipped
+      ? '<button class="btn" id="fcYes">✓ Knew it</button><button class="btn" id="fcNo">✗ Didn\'t</button>'
+      : '<button class="btn primary" id="fcFlip">Flip</button>' +
+        '<button class="btn" id="fcNext">Skip</button>';
+    if (fcFlipped) {
+      $("#fcYes").addEventListener("click", () => { fcRight++; fcSeen++; next(); });
+      $("#fcNo").addEventListener("click",  () => { fcSeen++; next(); });
+    } else {
+      $("#fcFlip").addEventListener("click", flip);
+      $("#fcNext").addEventListener("click", next);
+    }
+    $("#fcScore").textContent = fcSeen
+      ? fcRight + " of " + fcSeen + " known (" + Math.round(fcRight / fcSeen * 100) + "%) · " +
+        fcPool.length + " in deck"
+      : fcPool.length + " terms in this deck";
+    function next() { fcIdx++; fcFlipped = false; drawCard(); }
+  }
+
+  /* ================= TOOL: cost calculator ================= */
+  function renderCalc() {
+    docTitle.textContent = "Boat cost calculator";
+    content.innerHTML =
+      toolHead("Boat cost calculator", "Калькулятор вартості судна",
+        "The number most buyers never work out. Enter a boat and see the annual running cost " +
+        "and the realistic all-in first year.",
+        "Число, яке більшість покупців ніколи не рахує. Введіть параметри судна і подивіться " +
+        "щорічні витрати та реалістичний перший рік разом з покупкою.") +
+      '<div class="warn-box">' +
+        '<p data-lang="en"><strong>Planning estimates in 2026 Canadian dollars</strong>, from public listings and ' +
+        "published rate cards for the Halifax area. Club fees, yard rates and premiums vary widely and change " +
+        "yearly — <strong>get quotes before you commit.</strong></p>" +
+        '<p data-lang="ua"><strong>Оцінки для планування в канадських доларах 2026 року</strong> з публічних ' +
+        "оголошень і тарифів для району Галіфаксу. Клубні внески, тарифи майданчиків і премії сильно різняться — " +
+        "<strong>беріть комерційні пропозиції.</strong></p>" +
+      "</div>" +
+      '<div class="card">' +
+        '<div class="calc-grid">' +
+          '<div class="field"><label for="cPrice">Purchase price (CAD)</label>' +
+            '<input type="number" id="cPrice" value="30000" min="0" step="1000"></div>' +
+          '<div class="field"><label for="cLen">Length overall (ft)</label>' +
+            '<input type="number" id="cLen" value="30" min="15" max="60" step="1"></div>' +
+        "</div>" +
+        '<div style="display:flex;flex-wrap:wrap;gap:1rem;margin:0 0 1.1rem">' +
+          '<label class="opt"><input type="checkbox" id="cDodger" checked> Fit a dodger (recommended here)</label>' +
+          '<label class="opt"><input type="checkbox" id="cDiy" checked> Do my own yard work</label>' +
+        "</div>" +
+        '<div id="calcOut"></div>' +
+      "</div>";
+    ["cPrice", "cLen", "cDodger", "cDiy"].forEach(id =>
+      $("#" + id).addEventListener("input", drawCalc));
+    drawCalc();
+  }
+
+  function drawCalc() {
+    const price = Math.max(0, Number($("#cPrice").value) || 0);
+    const ft = Math.max(15, Number($("#cLen").value) || 30);
+    const dodger = $("#cDodger").checked;
+    const diy = $("#cDiy").checked;
+    const diyF = diy ? 0.55 : 1;
+
+    const annual = [
+      ["Club membership",              600,            1800],
+      ["Mooring or slip",              ft * 40,        ft * 115],
+      ["Winter storage ashore",        ft * 25,        ft * 65],
+      ["Haul-out and launch",          ft * 18 * diyF, ft * 40 * diyF],
+      ["Insurance",                    Math.max(300, price * 0.0075), Math.max(450, price * 0.015)],
+      ["Antifouling, anodes, consumables", ft * 12,    ft * 26],
+      ["Engine service",               200 * diyF,     600 * diyF],
+      ["Maintenance / repair fund",    Math.max(1500, price * 0.05), Math.max(3000, price * 0.10)],
+      ["Fuel",                         150,            400],
+      ["Safety gear renewal",          100,            300]
+    ];
+    const once = [
+      ["Purchase price",               price,          price],
+      ["Marine survey",                ft * 15,        ft * 30],
+      ["Haul-out for the survey",      200,            600],
+      ["Engine survey",                300,            700],
+      ["Immediate must-fix items",     price * 0.07,   price * 0.25],
+      ["Safety equipment + grab bag",  600,            1500],
+      ["Ground tackle upgrade",        500,            1500],
+      ["Personal gear for three",      1200,           2500]
+    ];
+    if (dodger) once.push(["Dodger", 1500, 3500]);
+
+    const sum = rows => rows.reduce((a, r) => [a[0] + r[1], a[1] + r[2]], [0, 0]);
+    const aT = sum(annual), oT = sum(once);
+    const pctLow = price ? Math.round(aT[0] / price * 100) : 0;
+    const pctHigh = price ? Math.round(aT[1] / price * 100) : 0;
+
+    const table = (label, rows, total, totalLabel) =>
+      '<p class="card-label">' + label + "</p>" +
+      '<div class="table-wrap"><table><thead><tr><th>Item</th><th>Low</th><th>High</th></tr></thead><tbody>' +
+      rows.map(r => "<tr><td>" + esc(r[0]) + '</td><td class="tabular">' + money(r[1]) +
+                    '</td><td class="tabular">' + money(r[2]) + "</td></tr>").join("") +
+      '<tr class="total-row"><td>' + totalLabel + '</td><td class="tabular">' + money(total[0]) +
+      '</td><td class="tabular">' + money(total[1]) + "</td></tr>" +
+      "</tbody></table></div>";
+
+    $("#calcOut").innerHTML =
+      table("Annual running cost · Щорічні витрати", annual, aT, "Total per year") +
+      '<p class="calc-note"><span data-lang="en">That is <strong>' + pctLow + "–" + pctHigh +
+        "% of the boat's value every year</strong>, before anything unexpected. The line people leave out is the " +
+        "maintenance fund — something fails every season.</span>" +
+        '<span data-lang="ua">Це <strong>' + pctLow + "–" + pctHigh +
+        "% вартості судна щороку</strong>, до будь-яких несподіванок. Рядок, який пропускають, — фонд ремонту.</span></p>" +
+      '<div style="height:1.6rem"></div>' +
+      table("First year, all in · Перший рік разом", once, oT, "Total one-time") +
+      '<div class="warn-box" style="margin-top:1.2rem">' +
+        '<p data-lang="en"><strong>Realistic first-year total: ' + money(oT[0] + aT[0]) + " – " +
+          money(oT[1] + aT[1]) + "</strong> on a " + money(price) + " boat — purchase, commissioning and " +
+          "one season of running costs together. Plan against this number, not the asking price.</p>" +
+        '<p data-lang="ua"><strong>Реалістичний підсумок першого року: ' + money(oT[0] + aT[0]) + " – " +
+          money(oT[1] + aT[1]) + "</strong> для судна за " + money(price) +
+          ". Плануйте під це число, а не під ціну в оголошенні.</p>" +
+      "</div>";
+  }
+
+  /* ================= TOOL: logbook ================= */
+  function renderLog() {
+    docTitle.textContent = "Logbook";
+    content.innerHTML =
+      toolHead("Logbook", "Судновий журнал",
+        "Certifications, insurers and charter companies all ask for logged hours — and a log " +
+        "is evidence where memory is not. Track hours as skipper separately: it is a different " +
+        "skill from crewing, and it is what the next certification actually assesses.",
+        "Сертифікації, страховики й чартерні компанії питають про записані години — журнал це " +
+        "доказ, а пам'ять ні. Відстежуйте години як шкіпер окремо: це інший навик, ніж робота " +
+        "в екіпажі.") +
+      '<div class="card">' +
+        '<p class="card-label">New entry · Новий запис</p>' +
+        '<div class="log-form">' +
+          '<input type="date" id="lgDate" aria-label="Date">' +
+          '<input type="text" id="lgBoat" placeholder="Boat" aria-label="Boat">' +
+          '<input type="text" id="lgRoute" placeholder="From → to" aria-label="Route">' +
+          '<input type="number" id="lgHours" placeholder="Hours" step="0.5" min="0" aria-label="Hours">' +
+          '<input type="text" id="lgWind" placeholder="Wind (e.g. SW 12 kt)" aria-label="Wind">' +
+          '<label class="opt"><input type="checkbox" id="lgSkip"> I was skipper</label>' +
+          '<textarea id="lgNotes" placeholder="What went well, what went wrong and why, what I&#39;ll do differently…" aria-label="Notes"></textarea>' +
+        "</div>" +
+        '<div class="btn-row"><button class="btn primary" id="lgAdd">Add entry</button>' +
+        '<button class="btn" id="lgExport">Download as Markdown</button></div>' +
+        '<div id="lgFallback"></div>' +
+      "</div>" +
+      '<div class="card"><p class="card-label">Totals · Підсумки</p><div id="lgTotals"></div></div>' +
+      '<div class="card"><p class="card-label">Entries · Записи</p><div id="lgList"></div></div>';
+    $("#lgDate").value = new Date().toISOString().slice(0, 10);
+    $("#lgAdd").addEventListener("click", addLog);
+    $("#lgExport").addEventListener("click", exportLog);
+    drawLog();
+  }
+
+  function addLog() {
+    const e = {
+      date:  $("#lgDate").value,
+      boat:  $("#lgBoat").value.trim(),
+      route: $("#lgRoute").value.trim(),
+      hours: Number($("#lgHours").value) || 0,
+      wind:  $("#lgWind").value.trim(),
+      skip:  $("#lgSkip").checked,
+      notes: $("#lgNotes").value.trim()
+    };
+    if (!e.date && !e.boat && !e.hours) { toast("Add a date, boat or hours first"); return; }
+    S.log.unshift(e); save();
+    ["lgBoat", "lgRoute", "lgHours", "lgWind", "lgNotes"].forEach(id => { $("#" + id).value = ""; });
+    $("#lgSkip").checked = false;
+    drawLog();
+    toast("Entry added");
+  }
+
+  function drawLog() {
+    const total = S.log.reduce((a, e) => a + (e.hours || 0), 0);
+    const skipper = S.log.reduce((a, e) => a + (e.skip ? (e.hours || 0) : 0), 0);
+    $("#lgTotals").innerHTML =
+      '<dl class="facts">' +
+        "<div><dt>Entries</dt><dd>" + S.log.length + "</dd></div>" +
+        "<div><dt>Total hours</dt><dd>" + total.toFixed(1) + "</dd></div>" +
+        "<div><dt>Hours as skipper</dt><dd>" + skipper.toFixed(1) + "</dd></div>" +
+        "<div><dt>Hours as crew</dt><dd>" + (total - skipper).toFixed(1) + "</dd></div>" +
+      "</dl>";
+    const list = $("#lgList");
+    if (!S.log.length) {
+      list.innerHTML = '<p class="empty">No entries yet. Add one after your next sail — the same day, ' +
+                       "while you still remember what went wrong.</p>";
+      return;
+    }
+    list.innerHTML =
+      '<div class="table-wrap"><table><thead><tr><th>Date</th><th>Boat</th><th>Route</th>' +
+      "<th>Hrs</th><th>Role</th><th>Wind</th><th>Notes</th><th></th></tr></thead><tbody>" +
+      S.log.map((e, i) =>
+        '<tr><td class="tabular">' + esc(e.date || "") + "</td><td>" + esc(e.boat || "") +
+        "</td><td>" + esc(e.route || "") + '</td><td class="tabular">' + (e.hours || 0) +
+        "</td><td>" + (e.skip ? "Skipper" : "Crew") + "</td><td>" + esc(e.wind || "") +
+        "</td><td>" + esc(e.notes || "") +
+        '</td><td><button class="btn" data-del="' + i + '" aria-label="Delete entry">✕</button></td></tr>'
+      ).join("") + "</tbody></table></div>";
+    list.addEventListener("click", e => {
+      const b = e.target.closest("[data-del]");
+      if (!b) return;
+      S.log.splice(Number(b.dataset.del), 1); save(); drawLog(); toast("Entry deleted");
+    });
+  }
+
+  function exportLog() {
+    if (!S.log.length) { toast("Nothing to export yet"); return; }
+    let md = "# Sailing logbook\n\n";
+    const total = S.log.reduce((a, e) => a + (e.hours || 0), 0);
+    const skipper = S.log.reduce((a, e) => a + (e.skip ? (e.hours || 0) : 0), 0);
+    md += "Total hours: " + total.toFixed(1) + "  \nHours as skipper: " + skipper.toFixed(1) +
+          "  \nEntries: " + S.log.length + "\n\n---\n\n";
+    S.log.forEach(e => {
+      md += "## " + (e.date || "(no date)") + " — " + (e.boat || "(boat)") + "\n\n";
+      md += "- Route: " + (e.route || "—") + "\n- Hours: " + (e.hours || 0) +
+            "\n- Role: " + (e.skip ? "Skipper" : "Crew") + "\n- Wind: " + (e.wind || "—") + "\n\n";
+      if (e.notes) md += e.notes + "\n\n";
+    });
+    if (saveTextFile("sailing-logbook.md", md, "text/markdown;charset=utf-8")) {
+      toast("Logbook downloaded");
+    } else {
+      // Some embedding contexts block downloads a page starts itself. Fall
+      // back to showing the text so it can always be copied out by hand.
+      showCopyFallback(md);
+      toast("Download blocked — copy the text instead");
+    }
+  }
+
+  /* ---------------- tool router ---------------- */
+  function renderTool(id) {
+    if (id === "t-pos")   return renderPOS();
+    if (id === "t-quiz")  return renderQuiz();
+    if (id === "t-cards") return renderCards();
+    if (id === "t-calc")  return renderCalc();
+    if (id === "t-log")   return renderLog();
+  }
+
+  /* ---------------- boot ---------------- */
+  buildNav();
+
+  $$("[data-lang-set]").forEach(b => b.addEventListener("click", () => {
+    app.setAttribute("data-lang", b.dataset.langSet);
+    $$("[data-lang-set]").forEach(o => o.setAttribute("aria-pressed", String(o === b)));
+    S.lang = b.dataset.langSet; save();
+  }));
+  if (S.lang) {
+    const b = $('[data-lang-set="' + S.lang + '"]');
+    if (b) b.click();
+  }
+
+  let searchT;
+  $("#search").addEventListener("input", e => {
+    clearTimeout(searchT);
+    const v = e.target.value;
+    searchT = setTimeout(() => runSearch(v), 160);
+  });
+
+  $("#burger").addEventListener("click", () => {
+    const open = app.classList.toggle("nav-open");
+    $("#burger").setAttribute("aria-expanded", String(open));
+  });
+  $("#scrim").addEventListener("click", closeNav);
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeNav(); });
+
+  const start = (location.hash || "").replace(/^#\//, "");
+  const valid = !!DOCS[start] || TOOLS.some(t => t.id === start);
+  go(valid ? start : "readme");
+})();
+</script>

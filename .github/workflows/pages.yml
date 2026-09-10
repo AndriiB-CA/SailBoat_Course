@@ -1,0 +1,93 @@
+name: Deploy course site to GitHub Pages
+
+# Publishes docs/ to GitHub Pages.
+#
+# ONE-TIME SETUP: Pages must be switched on by a repository admin before this
+# can succeed. A workflow token is not allowed to create a Pages site, so
+# self-enablement is not possible.
+#
+#   Settings -> Pages -> Build and deployment -> Source: GitHub Actions
+#
+# After that this workflow runs on every push to the default branch, and the
+# "Configure Pages" step below becomes a no-op.
+
+on:
+  push:
+    paths:
+      - "docs/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never run two deploys at once, and let a running deploy finish rather than
+# cancelling it partway.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # Only the default branch publishes; a manual run always does. Written
+    # against the repository's own default branch so renaming it needs no
+    # change here.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Check whether the committed site matches the markdown
+        # Advisory only: a mismatch still deploys, it just tells you the
+        # committed site is behind the source. Rebuild with
+        # `python3 web/build.py --pages` and commit to clear it.
+        continue-on-error: true
+        run: |
+          python3 web/build.py --pages
+          if git diff --quiet -- docs/; then
+            echo "docs/ is up to date with the markdown source."
+          else
+            echo "::warning::docs/ looks stale — the committed site does not match the markdown. Run 'python3 web/build.py --pages' and commit."
+            git diff --stat -- docs/
+          fi
+          # deploy whatever is committed, not the rebuild
+          git checkout -- docs/
+
+      - name: Configure Pages
+        id: configure
+        uses: actions/configure-pages@v5
+        with:
+          # Attempted, but the workflow token is normally refused; harmless
+          # once Pages has been enabled by hand.
+          enablement: true
+
+      - name: Explain how to enable Pages
+        if: failure() && steps.configure.outcome == 'failure'
+        run: |
+          echo "::error title=GitHub Pages is not enabled::Enable it once by hand, then re-run this workflow."
+          echo ""
+          echo "  1. Open  Settings -> Pages"
+          echo "  2. Under 'Build and deployment', set Source: GitHub Actions"
+          echo "  3. Re-run this workflow from the Actions tab"
+          echo ""
+          echo "The workflow token cannot create a Pages site itself"
+          echo "('Resource not accessible by integration'), which is why this"
+          echo "step is required once per repository."
+
+
+      - name: Upload the site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
